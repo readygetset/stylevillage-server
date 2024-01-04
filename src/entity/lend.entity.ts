@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import BaseTime from './baseTime.entity';
 import User from './user.entity';
 import Clothes from './clothes.entity';
@@ -8,7 +8,7 @@ export default class Lend extends BaseTime {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @OneToOne(() => Clothes, {
+  @ManyToOne(() => Clothes, {
     cascade: ['insert', 'recover', 'update'],
   })
   clothes!: Clothes;
