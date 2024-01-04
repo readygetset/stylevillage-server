@@ -33,6 +33,7 @@ export default class Clothes extends BaseTime {
   @Column({
     type: 'enum',
     enum: Status,
+    default: Status.UNAVAILABLE,
     nullable: false,
     comment: '상태',
   })
