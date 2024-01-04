@@ -1,7 +1,11 @@
-// 예시 type/dto입니다. 필요에 따라 수정하거나 삭제하셔도 됩니다.
+import City from "../../common/enum/city.enum";
+import Gender from "../../common/enum/gender.enum";
 
-export default interface CreateUserInput {
-  firstName: string;
-  lastName: string;
-  age?: number;
+export default interface RegisterInput {
+  username: string;
+  password: string;
+  nickname: string;
+  gender: Gender;
+  location: City;
+  phoneNumber: string;
 }
