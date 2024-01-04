@@ -1,8 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import BaseTime from './baseTime.entity';
 import User from './user.entity';
 import Clothes from './clothes.entity';
-
 
 @Entity()
 export default class Apply extends BaseTime {
