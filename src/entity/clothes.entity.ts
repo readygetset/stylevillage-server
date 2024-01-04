@@ -3,6 +3,7 @@ import BaseTime from './baseTime.entity';
 import Closet from './closet.entity';
 import Category from '../common/enum/category.enum';
 import Season from '../common/enum/season.enum';
+import Status from '../common/enum/status.enum';
 
 @Entity()
 export default class Clothes extends BaseTime {
