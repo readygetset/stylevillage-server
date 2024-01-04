@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import BaseTime from './baseTime.entity';
 import Gender from '../common/enum/gender.enum';
+import Location from '../common/enum/location.enum';
 
 @Entity()
 @Unique(['username'])
