@@ -22,7 +22,7 @@ export default class Like extends BaseTime {
     type: 'boolean',
     default: false,
     nullable: false,
-    comment: '좋아요 여부',
+    comment: '찜 여부',
   })
   is_liked!: boolean;
 }
