@@ -12,7 +12,7 @@ export default class Clothes extends BaseTime {
   @ManyToOne(() => Closet, {
     cascade: ['insert', 'recover', 'update'],
   })
-  owner!: Closet;
+  closet!: Closet;
 
   @Column({
     type: 'enum',
@@ -33,13 +33,14 @@ export default class Clothes extends BaseTime {
   @Column({
     type: 'enum',
     enum: Status,
-    nullable: true,
+    nullable: false,
     comment: '상태',
   })
-  status?: Status;
+  status!: Status;
 
   @Column({
     type: 'boolean',
+    default: true,
     nullable: false,
     comment: '공개여부',
   })
