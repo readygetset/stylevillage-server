@@ -8,7 +8,7 @@ export default interface CreateClothesReq {
   category?: Category;
   season?: Season;
   status: Status;
-  is_open: boolean;
+  isOpen: boolean;
   name: string;
   tag?: string;
   image?: string;
