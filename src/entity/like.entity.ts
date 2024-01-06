@@ -24,5 +24,5 @@ export default class Like extends BaseTime {
     nullable: false,
     comment: '찜 여부',
   })
-  is_liked!: boolean;
+  isLiked!: boolean;
 }
