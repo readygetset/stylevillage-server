@@ -63,4 +63,12 @@ export default class Clothes extends BaseTime {
     comment: '태그',
   })
   tag?: string;
+
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: false,
+    comment: '이미지',
+  })
+  image!: string;
 }
