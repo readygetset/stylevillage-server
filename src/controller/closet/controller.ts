@@ -3,7 +3,7 @@ import { BadRequestError } from '../../util/customErrors';
 import ClosetService from '../../service/closet.service';
 // import getClosetReq from '../../type/closet/getCloset.req';
 import getClosetRes from '../../type/closet/getCloset.res';
-import Cloth from '../../type/clothes/getClosetClothes';
+import Clothes from '../../type/clothes/getClosetClothes';
 
 export const getClosetById: RequestHandler = async (req, res, next) => {
   try {
@@ -14,15 +14,15 @@ export const getClosetById: RequestHandler = async (req, res, next) => {
 
     const clothes = await ClosetService.getClothesInCloset(id);
 
-    const clothesInfo: Array<Cloth> = clothes.map((cloth) => {
-      const eachCloth: Cloth = {
-        id: cloth.id,
-        category: cloth.category,
-        season: cloth.season,
-        status: cloth.status,
-        name: cloth.name,
-        tag: cloth.tag,
-        image: cloth.image,
+    const clothesInfo: Array<Clothes> = clothes.map((clothes) => {
+      const eachCloth: Clothes = {
+        id: clothes.id,
+        category: clothes.category,
+        season: clothes.season,
+        status: clothes.status,
+        name: clothes.name,
+        tag: clothes.tag,
+        image: clothes.image,
       };
       return eachCloth;
     });

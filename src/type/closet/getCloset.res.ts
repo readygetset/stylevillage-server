@@ -1,9 +1,9 @@
-import Cloth from '../clothes/getClosetClothes';
-import User from '../../entity/user.entity'
+import Clothes from '../clothes/getClosetClothes';
+import User from '../../entity/user.entity';
 
 export default interface getClosetRes {
   id?: number;
   name: string;
   owner: User;
-  clothes: Array<Cloth>;
+  clothes: Array<Clothes>;
 }

@@ -70,5 +70,5 @@ export default class Clothes extends BaseTime {
     nullable: false,
     comment: '이미지',
   })
-  image!: string;
+  image?: string;
 }
