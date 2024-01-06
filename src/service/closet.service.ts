@@ -1,6 +1,5 @@
 import ClosetRepository from '../repository/closet.repository';
 import Closet from '../entity/closet.entity';
-import PostCloset from '../type/closet/closet';
 import { DuplicateValueError } from '../util/customErrors';
 import PostClosetReq from '../type/closet/postCloset.req';
 

@@ -1,4 +1,4 @@
-export default interface PostCloset {
+export default interface Closet {
   name: string;
   owner: number;
 }

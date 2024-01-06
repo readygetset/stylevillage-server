@@ -2,7 +2,6 @@ import { RequestHandler } from 'express';
 import { BadRequestError } from '../../util/customErrors';
 import ClosetService from '../../service/closet.service';
 import Closet from '../../type/closet/closet';
-import PostClosetReq from '../../type/closet/postCloset.req';
 import PostClosetRes from '../../type/closet/postCloset.res';
 import LoginUser from '../../type/user/loginUser';
 
@@ -16,8 +15,7 @@ export const postCloset: RequestHandler = async (req, res, next) => {
       res.status(401).json({ error: '로그인이 필요한 기능입니다.' });
       return;
     }
-    const { id } = req.user as LoginUser;
-    const owner = Number(id);
+    const { id: owner } = req.user as LoginUser;
     const closet: Closet = {
       name,
       owner,
