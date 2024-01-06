@@ -1,5 +1,5 @@
 export default interface LoginUser extends Express.User {
-  id: string;
+  id: number;
   username: string;
   nickname: string;
 }
