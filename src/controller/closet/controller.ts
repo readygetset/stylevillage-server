@@ -12,10 +12,11 @@ export const postCloset: RequestHandler = async (req, res, next) => {
     if (!name) {
       throw new BadRequestError('옷장 이름을 입력하세요.');
     }
-    const { id } = req.user as LoginUser;
-    if (!id) {
-      throw new BadRequestError('로그인이 필요한 기능입니다.');
+    if (!req.user) {
+      res.status(401).json({ error: '로그인이 필요한 기능입니다.' });
+      return;
     }
+    const { id } = req.user as LoginUser;
     const owner = Number(id);
     const closet: Closet = {
       name,
