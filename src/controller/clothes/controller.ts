@@ -70,6 +70,8 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('수정할 항목을 입력해주세요.');
     }
 
+    //Todo. Enum 유효성 검사를 진행하지 않았는데, issue에 있는 enum 유효성을 검사하는 util을 생성하는 브랜치에서 작업할 계획입니다.
+
     const clothesId: number = id;
     const modifyClothesReq: ModifyClothesReq = clothesInfo;
 
