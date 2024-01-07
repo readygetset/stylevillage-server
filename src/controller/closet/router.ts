@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { getClosetById } from './controller';
+import { getCloset } from './controller';
 
 const closetRouter = Router();
 
-closetRouter.get('/:closetId', getClosetById);
+closetRouter.get('/:closetId', getCloset);
 
 export default closetRouter;
