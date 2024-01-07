@@ -46,7 +46,7 @@ export default class Clothes extends BaseTime {
     nullable: false,
     comment: '공개여부',
   })
-  is_opened!: boolean;
+  isOpen!: boolean;
 
   @Column({
     type: 'varchar',
@@ -67,7 +67,7 @@ export default class Clothes extends BaseTime {
   @Column({
     type: 'varchar',
     length: 255,
-    nullable: false,
+    nullable: true,
     comment: '이미지',
   })
   image?: string;

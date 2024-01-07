@@ -5,6 +5,8 @@ import ClothesRepository from '../repository/clothes.repository';
 import getClosetRes from '../type/closet/getCloset.res';
 import getClosetClothes from '../type/clothes/getClosetClothes';
 import userRes from '../type/user/user.res';
+import PostClosetReq from '../type/closet/postCloset.req';
+import { BadRequestError, DuplicateValueError } from '../util/customErrors';
 
 export default class ClosetService {
   static async getCloset(
@@ -29,10 +31,17 @@ export default class ClosetService {
       return eachClothes;
     });
 
+    // const ownerInfo: userRes = {
+    //   id: closet.owner.id,
+    //   username: closet.owner.username,
+    //   nickname: closet.owner.nickname,
+    // };
+
+    //여기서 에러 발생
     const ownerInfo: userRes = {
-      id: closet.owner.id,
-      username: closet.owner.username,
-      nickname: closet.owner.nickname,
+      id: 1,
+      username: 'test1',
+      nickname: undefined,
     };
 
     const closetInfo: getClosetRes = {
@@ -43,5 +52,15 @@ export default class ClosetService {
     };
 
     return closetInfo;
+  }
+
+  static async postCloset(closet: PostClosetReq): Promise<Closet> {
+    const isDuplicate = await ClosetRepository.checkDuplicateCloset(
+      closet.name,
+    );
+
+    if (isDuplicate) throw new DuplicateValueError('중복되는 옷장 이름입니다.');
+    const newCloset = ClosetRepository.create(closet);
+    return await ClosetRepository.save(newCloset);
   }
 }

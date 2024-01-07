@@ -1,7 +1,15 @@
 import AppDataSource from '../config/dataSource';
 import Clothes from '../entity/clothes.entity';
+import { BadRequestError } from '../util/customErrors';
 
 const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
+  async findOneByClothesId(id: number): Promise<Clothes> {
+    return this.findOneBy({ id }).then((clothes) => {
+      if (!clothes) throw new BadRequestError('등록되어있지 않은 의류입니다.');
+      return clothes;
+    });
+  },
+
   async findByClosetId(closetId: number): Promise<Clothes[]> {
     return this.find({
       where: { id: closetId },
@@ -14,7 +22,7 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
   ): Promise<Clothes[]> {
     return this.find({
       where: [
-        { id: closetId, is_opened: true },
+        { id: closetId, isOpen: true },
         { id: closetId, closet: { owner: { id: userId } } },
       ],
     });

@@ -9,6 +9,13 @@ const ClosetRepository = AppDataSource.getRepository(Closet).extend({
       return closet;
     });
   },
+
+  async checkDuplicateCloset(name: string): Promise<boolean> {
+    return this.findOneBy({ name }).then((closet) => {
+      if (closet) return true;
+      return false;
+    });
+  },
 });
 
 export default ClosetRepository;
