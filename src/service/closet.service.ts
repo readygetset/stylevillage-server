@@ -7,9 +7,14 @@ import getClosetClothes from '../type/clothes/getClosetClothes';
 import userRes from '../type/user/user.res';
 
 export default class ClosetService {
-  static async getCloset(closetId: number): Promise<getClosetRes> {
+  static async getCloset(
+    closetId: number,
+    userId: number | undefined,
+  ): Promise<getClosetRes> {
     const closet: Closet = await ClosetRepository.findOneByClosetId(closetId);
-    const clothes: Clothes[] = await ClothesRepository.findByClosetId(closetId);
+    const clothes: Clothes[] = !userId
+      ? await ClothesRepository.findByClosetId(closetId)
+      : await ClothesRepository.findVisibleByClosetId(closetId, userId);
 
     const clothesInfo: Array<getClosetClothes> = clothes.map((clothes) => {
       const eachClothes: getClosetClothes = {
