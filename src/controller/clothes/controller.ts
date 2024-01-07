@@ -1,8 +1,10 @@
 import { RequestHandler } from 'express';
+import GetClothesReq from '../../type/getClothes/getClothes.req';
+import GetClothesRes from '../../type/getClothes/getClothes.res';
+import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
 import ClothesService from '../../service/clothes.service';
 import CreateClothesReq from '../../type/clothes/createClothes.req';
 import CreateClothesRes from '../../type/clothes/createClothes.res';
-import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
 import Category from '../../common/enum/category.enum';
 import Season from '../../common/enum/season.enum';
 import Status from '../../common/enum/status.enum';
@@ -53,6 +55,25 @@ export const createClothes: RequestHandler = async (req, res, next) => {
     res.json(creaetClothesRes);
   } catch (error) {
     console.log('error in createClothes :', error);
+    next(error);
+  }
+};
+
+export const getClothes: RequestHandler = async (req, res, next) => {
+  try {
+    const clothesId = Number(req.params.clothesId);
+
+    if (!clothesId) throw new BadRequestError('ClothesId is required.');
+
+    const ClothesId: GetClothesReq = { clothesId };
+
+    const getClothesRes: GetClothesRes = await ClothesService.getClothes(
+      ClothesId,
+      req.user ? req.user.id : null,
+    );
+
+    res.json(getClothesRes);
+  } catch (error) {
     next(error);
   }
 };

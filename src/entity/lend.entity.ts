@@ -25,14 +25,14 @@ export default class Lend extends BaseTime {
     nullable: false,
     comment: '대여시작날짜',
   })
-  start_date!: Date;
+  startDate!: Date;
 
   @Column({
     type: 'timestamp',
     nullable: false,
     comment: '대여마감날짜',
   })
-  end_date!: Date;
+  endDate!: Date;
 
   @ManyToOne(() => User, {
     cascade: ['insert', 'recover', 'update'],
