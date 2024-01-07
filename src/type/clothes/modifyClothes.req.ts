@@ -4,7 +4,6 @@ import Season from '../../common/enum/season.enum';
 import Status from '../../common/enum/status.enum';
 
 export default interface ModifyClothesReq {
-  id: number;
   closet?: Closet;
   category?: Category;
   season?: Season;

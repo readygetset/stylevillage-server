@@ -17,13 +17,14 @@ export default class ClothesService {
   }
 
   static async modifyClothes(
+    id: number,
     clothesInfo: ModifyClothesReq,
   ): Promise<UpdateResult> {
     try {
-      const clothesId = clothesInfo.id;
-      await ClothesRepository.findOneByClothesId(clothesId);
+      await ClothesRepository.findOneByClothesId(id);
+      console.log('isHereExecuted?');
 
-      return await ClothesRepository.update({ id: clothesId }, clothesInfo);
+      return await ClothesRepository.update({ id: id }, clothesInfo);
     } catch (error) {
       throw new Error(`error in modifyClothes : ${error}`);
     }
