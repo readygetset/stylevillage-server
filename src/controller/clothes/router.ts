@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { createClothes } from './controller';
+import { getClothes, createClothes } from './controller';
 
 const clothesRouter = Router();
 
 clothesRouter.post('/', createClothes);
+clothesRouter.get('/:clothesId', getClothes);
 
 export default clothesRouter;
