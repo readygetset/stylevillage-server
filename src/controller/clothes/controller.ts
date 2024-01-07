@@ -60,14 +60,15 @@ export const createClothes: RequestHandler = async (req, res, next) => {
 export const getClothes: RequestHandler = async (req, res, next) => {
   try {
     const clothesId = Number(req.params.clothesId);
-    //const { clothesId } = req.body;
 
     if (!clothesId) throw new BadRequestError('ClothesId is required.');
 
     const ClothesId: GetClothesReq = { clothesId };
 
-    const getClothesRes: GetClothesRes =
-      await ClothesService.getClothes(ClothesId);
+    const getClothesRes: GetClothesRes = await ClothesService.getClothes(
+      ClothesId,
+      req.user ? req.user.id : null,
+    );
 
     res.json(getClothesRes);
   } catch (error) {

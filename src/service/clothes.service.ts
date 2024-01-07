@@ -17,13 +17,16 @@ export default class ClothesService {
     }
   }
 
-  static async getClothes(id: GetClothesReq): Promise<GetClothesRes> {
+  static async getClothes(
+    id: GetClothesReq,
+    userId: number | null,
+  ): Promise<GetClothesRes> {
     const { clothesId } = id;
     const clothes = await ClothesRepository.findOneByClothesId(clothesId);
 
-    if (!clothes.isOpen) throw new ForbiddenError('공개되지 않은 옷입니다.');
-
-    const getClothesRes: GetClothesRes = clothes;
-    return getClothesRes;
+    if (clothes.isOpen || (userId && userId === clothes.closet.owner.id)) {
+      const getClothesRes: GetClothesRes = clothes;
+      return getClothesRes;
+    } else throw new ForbiddenError('공개되지 않은 옷입니다.');
   }
 }
