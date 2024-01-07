@@ -1,9 +1,6 @@
 import Clothes from '../entity/clothes.entity';
 import CreateClothesReq from '../type/clothes/createClothes.req';
-import {
-  ClothesRepository,
-  GetClothesRepository,
-} from '../repository/clothes.repository';
+import ClothesRepository from '../repository/clothes.repository';
 import GetClothesReq from '../type/getClothes/getClothes.req';
 import GetClothesRes from '../type/getClothes/getClothes.res';
 import { ForbiddenError } from '../util/customErrors';
@@ -22,7 +19,7 @@ export default class ClothesService {
 
   static async getClothes(id: GetClothesReq): Promise<GetClothesRes> {
     const { clothesId } = id;
-    const clothes = await GetClothesRepository.findOneByClothesId(clothesId);
+    const clothes = await ClothesRepository.findOneByClothesId(clothesId);
 
     if (!clothes.isOpen) throw new ForbiddenError('공개되지 않은 옷입니다.');
 
