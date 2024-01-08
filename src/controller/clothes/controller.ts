@@ -84,9 +84,14 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
   try {
     const id = Number(req.params.clothesId);
     const clothesInfo = req.body;
+    const user = req.user as LoginUser;
 
-    if (!req.user) {
+    if (!user) {
       throw new UnauthorizedError('로그인이 필요한 기능입니다.');
+    } else {
+      if (!(user == clothesInfo.owner)) {
+        throw new UnauthorizedError('본인이 등록한 옷만 수정할 수 있습니다');
+      }
     }
 
     if (!clothesInfo) {
@@ -94,7 +99,6 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
     }
 
     //Todo. Enum 유효성 검사를 진행하지 않았는데, issue에 있는 enum 유효성을 검사하는 util을 생성하는 브랜치에서 작업할 계획입니다.
-
     const clothesId: number = id;
     const modifyClothesReq: ModifyClothesReq = clothesInfo;
 
