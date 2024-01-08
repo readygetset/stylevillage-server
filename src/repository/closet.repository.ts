@@ -18,6 +18,11 @@ const ClosetRepository = AppDataSource.getRepository(Closet).extend({
       return false;
     });
   },
+
+  async getOwnerId(id: number): Promise<number | undefined> {
+    const closet = await this.findOneByClosetId(id);
+    return closet.owner.id;
+  },
 });
 
 export default ClosetRepository;
