@@ -3,8 +3,8 @@ import CreateClothesReq from '../type/clothes/createClothes.req';
 import ClothesRepository from '../repository/clothes.repository';
 import ModifyClothesReq from '../type/clothes/modifyClothes.req';
 import { UpdateResult } from 'typeorm';
-import GetClothesReq from '../type/getClothes/getClothes.req';
-import GetClothesRes from '../type/getClothes/getClothes.res';
+import GetClothesReq from '../type/clothes/getClothes.req';
+import GetClothesRes from '../type/clothes/getClothes.res';
 import { BadRequestError, ForbiddenError } from '../util/customErrors';
 
 export default class ClothesService {
