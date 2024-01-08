@@ -12,7 +12,7 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
 
   async findByClosetId(closetId: number): Promise<Clothes[]> {
     return this.find({
-      where: { id: closetId },
+      where: { id: closetId, isOpen: true },
     });
   },
 

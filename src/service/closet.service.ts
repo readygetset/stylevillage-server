@@ -6,7 +6,7 @@ import getClosetRes from '../type/closet/getCloset.res';
 import getClosetClothes from '../type/clothes/getClosetClothes';
 import userRes from '../type/user/user.res';
 import PostClosetReq from '../type/closet/postCloset.req';
-import { BadRequestError, DuplicateValueError } from '../util/customErrors';
+import { DuplicateValueError } from '../util/customErrors';
 
 export default class ClosetService {
   static async getCloset(
@@ -31,17 +31,10 @@ export default class ClosetService {
       return eachClothes;
     });
 
-    // const ownerInfo: userRes = {
-    //   id: closet.owner.id,
-    //   username: closet.owner.username,
-    //   nickname: closet.owner.nickname,
-    // };
-
-    //여기서 에러 발생
     const ownerInfo: userRes = {
-      id: 1,
-      username: 'test1',
-      nickname: undefined,
+      id: closet.owner.id,
+      username: closet.owner.username,
+      nickname: closet.owner.nickname,
     };
 
     const closetInfo: getClosetRes = {
