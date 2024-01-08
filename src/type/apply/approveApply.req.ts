@@ -3,6 +3,7 @@ export default interface approveApplyReq {
   user: number;
   clothes: number;
   detail: string;
+  isAccpted: boolean;
 }
 
 // Table apply {
