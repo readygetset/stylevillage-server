@@ -83,20 +83,39 @@ export const getClothes: RequestHandler = async (req, res, next) => {
 export const modifyClothes: RequestHandler = async (req, res, next) => {
   try {
     const id = Number(req.params.clothesId);
-    const clothesInfo = req.body;
+    const { closet, category, season, status, isOpen, name, tag, image } =
+      req.body;
     const user = req.user as LoginUser;
 
     if (!user) {
       throw new UnauthorizedError('로그인이 필요한 기능입니다.');
     }
 
-    if (!clothesInfo) {
+    if (
+      !closet &&
+      !category &&
+      !season &&
+      !status &&
+      !isOpen &&
+      !name &&
+      !tag &&
+      !image
+    ) {
       throw new BadRequestError('수정할 항목을 입력해주세요.');
     }
 
     //Todo. Enum 유효성 검사를 진행하지 않았는데, issue에 있는 enum 유효성을 검사하는 util을 생성하는 브랜치에서 작업할 계획입니다.
     const clothesId: number = id;
-    const modifyClothesReq: ModifyClothesReq = clothesInfo;
+    const modifyClothesReq: ModifyClothesReq = {
+      closet,
+      category,
+      season,
+      status,
+      isOpen,
+      name,
+      tag,
+      image,
+    };
 
     await ClothesService.modifyClothes(user.id, clothesId, modifyClothesReq);
 
