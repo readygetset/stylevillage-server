@@ -11,6 +11,7 @@ import Season from '../../common/enum/season.enum';
 import Status from '../../common/enum/status.enum';
 import ModifyClothesReq from '../../type/clothes/modifyClothes.req';
 import ModifyClothesRes from '../../type/clothes/modifyClothes.res';
+import isInEnum from '../../util/isInEnum';
 
 export const createClothes: RequestHandler = async (req, res, next) => {
   try {
@@ -25,18 +26,14 @@ export const createClothes: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('closet,name are essential');
     }
 
-    //Todo 유효성 검사 기능 분리
-    if (category) {
-      if (!Object.values(Category).includes(category))
-        throw new BadRequestError('category is invalid');
+    if (category && !isInEnum(category, Category)) {
+      throw new BadRequestError('---');
     }
-    if (season) {
-      if (!Object.values(Season).includes(season))
-        throw new BadRequestError('season is invalid');
+    if (season && !isInEnum(season, Season)) {
+      throw new BadRequestError('---');
     }
-    if (status) {
-      if (!Object.values(Status).includes(status))
-        throw new BadRequestError('status is invalid');
+    if (status && !isInEnum(status, Status)) {
+      throw new BadRequestError('---');
     }
 
     const clothesInfo: CreateClothesReq = {
@@ -104,7 +101,16 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('수정할 항목을 입력해주세요.');
     }
 
-    //Todo. Enum 유효성 검사를 진행하지 않았는데, issue에 있는 enum 유효성을 검사하는 util을 생성하는 브랜치에서 작업할 계획입니다.
+    if (category && !isInEnum(category, Category)) {
+      throw new BadRequestError('---');
+    }
+    if (season && !isInEnum(season, Season)) {
+      throw new BadRequestError('---');
+    }
+    if (status && !isInEnum(status, Status)) {
+      throw new BadRequestError('---');
+    }
+
     const clothesId: number = id;
     const modifyClothesReq: ModifyClothesReq = {
       closet,
