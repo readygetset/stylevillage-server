@@ -7,6 +7,7 @@ import modifyClosetRes from '../../type/closet/modifyCloset.res';
 import Closet from '../../type/closet/closet';
 import LoginUser from '../../type/user/loginUser';
 import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
+import getClosetListRes from '../../type/closet/getClosetList.res';
 
 export const postCloset: RequestHandler = async (req, res, next) => {
   try {
@@ -15,8 +16,7 @@ export const postCloset: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('옷장 이름을 입력하세요.');
     }
     if (!req.user) {
-      res.status(401).json({ error: '로그인이 필요한 기능입니다.' });
-      return;
+      throw new UnauthorizedError('로그인이 필요한 기능입니다.');
     }
     const { id: owner } = req.user as LoginUser;
     const closet: Closet = {
@@ -27,6 +27,19 @@ export const postCloset: RequestHandler = async (req, res, next) => {
 
     const postClosetRes: PostClosetRes = { name };
     res.json(postClosetRes);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getClosetList: RequestHandler = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      throw new UnauthorizedError('로그인이 필요한 기능입니다.');
+    }
+    const { id } = req.user as LoginUser;
+    const closetList: getClosetListRes = await ClosetService.getClosetList(id);
+    res.json(closetList);
   } catch (error) {
     next(error);
   }

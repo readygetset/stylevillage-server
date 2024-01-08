@@ -12,6 +12,10 @@ const ClosetRepository = AppDataSource.getRepository(Closet).extend({
     );
   },
 
+  async findByUserId(userId: number): Promise<Closet[]> {
+    return this.find({ where: { owner: { id: userId } } });
+  },
+
   async checkDuplicateCloset(name: string): Promise<boolean> {
     return this.findOneBy({ name }).then((closet) => {
       if (closet) return true;
