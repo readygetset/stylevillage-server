@@ -88,10 +88,6 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
 
     if (!user) {
       throw new UnauthorizedError('로그인이 필요한 기능입니다.');
-    } else {
-      if (!(user == clothesInfo.owner)) {
-        throw new UnauthorizedError('본인이 등록한 옷만 수정할 수 있습니다');
-      }
     }
 
     if (!clothesInfo) {
@@ -102,7 +98,7 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
     const clothesId: number = id;
     const modifyClothesReq: ModifyClothesReq = clothesInfo;
 
-    await ClothesService.modifyClothes(clothesId, modifyClothesReq);
+    await ClothesService.modifyClothes(user.id, clothesId, modifyClothesReq);
 
     const modifyClothesRes: ModifyClothesRes = { isSuccess: true };
     res.json(modifyClothesRes);
