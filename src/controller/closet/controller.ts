@@ -1,9 +1,10 @@
 import { RequestHandler } from 'express';
-import { BadRequestError } from '../../util/customErrors';
 import ClosetService from '../../service/closet.service';
-import Closet from '../../type/closet/closet';
 import PostClosetRes from '../../type/closet/postCloset.res';
+import getClosetRes from '../../type/closet/getCloset.res';
+import Closet from '../../type/closet/closet';
 import LoginUser from '../../type/user/loginUser';
+import { BadRequestError } from '../../util/customErrors';
 
 export const postCloset: RequestHandler = async (req, res, next) => {
   try {
@@ -24,6 +25,22 @@ export const postCloset: RequestHandler = async (req, res, next) => {
 
     const postClosetRes: PostClosetRes = { name };
     res.json(postClosetRes);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCloset: RequestHandler = async (req, res, next) => {
+  try {
+    const closetId = Number(req.params.closetId);
+    const user = req.user as LoginUser;
+
+    const closetInfo: getClosetRes = await ClosetService.getCloset(
+      closetId,
+      req.user ? user.id : undefined,
+    );
+
+    res.json(closetInfo);
   } catch (error) {
     next(error);
   }

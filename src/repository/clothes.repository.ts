@@ -9,6 +9,24 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
       return clothes;
     });
   },
+
+  async findByClosetId(closetId: number): Promise<Clothes[]> {
+    return this.find({
+      where: { id: closetId, isOpen: true },
+    });
+  },
+
+  async findVisibleByClosetId(
+    closetId: number,
+    userId: number,
+  ): Promise<Clothes[]> {
+    return this.find({
+      where: [
+        { id: closetId, isOpen: true },
+        { id: closetId, closet: { owner: { id: userId } } },
+      ],
+    });
+  },
 });
 
 export default ClothesRepository;

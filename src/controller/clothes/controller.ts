@@ -5,6 +5,7 @@ import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
 import ClothesService from '../../service/clothes.service';
 import CreateClothesReq from '../../type/clothes/createClothes.req';
 import CreateClothesRes from '../../type/clothes/createClothes.res';
+import LoginUser from '../../type/user/loginUser';
 import Category from '../../common/enum/category.enum';
 import Season from '../../common/enum/season.enum';
 import Status from '../../common/enum/status.enum';
@@ -66,10 +67,11 @@ export const getClothes: RequestHandler = async (req, res, next) => {
     if (!clothesId) throw new BadRequestError('ClothesId is required.');
 
     const ClothesId: GetClothesReq = { clothesId };
+    const user = req.user as LoginUser;
 
     const getClothesRes: GetClothesRes = await ClothesService.getClothes(
       ClothesId,
-      req.user ? req.user.id : null,
+      req.user ? user.id : null,
     );
 
     res.json(getClothesRes);
