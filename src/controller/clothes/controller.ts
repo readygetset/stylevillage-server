@@ -26,17 +26,14 @@ export const createClothes: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('closet,name are essential');
     }
 
-    if (category) {
-      if (!isInEnum(category, Object.values(Category)))
-        throw new BadRequestError(`${category} is invalid`);
+    if (category && !isInEnum(category, Category)) {
+      throw new BadRequestError('---');
     }
-    if (season) {
-      if (!isInEnum(season, Object.values(Season)))
-        throw new BadRequestError(`${season} is invalid`);
+    if (season && !isInEnum(category, Season)) {
+      throw new BadRequestError('---');
     }
-    if (status) {
-      if (!isInEnum(status, Object.values(Status)))
-        throw new BadRequestError(`${status} is invalid`);
+    if (status && !isInEnum(category, Status)) {
+      throw new BadRequestError('---');
     }
 
     const clothesInfo: CreateClothesReq = {
@@ -104,17 +101,14 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('수정할 항목을 입력해주세요.');
     }
 
-    if (category) {
-      if (!isInEnum(category, Object.values(Category)))
-        throw new BadRequestError(`${category} is invalid`);
+    if (category && !isInEnum(category, Category)) {
+      throw new BadRequestError('---');
     }
-    if (season) {
-      if (!isInEnum(season, Object.values(Season)))
-        throw new BadRequestError(`${season} is invalid`);
+    if (season && !isInEnum(category, Season)) {
+      throw new BadRequestError('---');
     }
-    if (status) {
-      if (!isInEnum(status, Object.values(Status)))
-        throw new BadRequestError(`${status} is invalid`);
+    if (status && !isInEnum(category, Status)) {
+      throw new BadRequestError('---');
     }
 
     //Todo. Enum 유효성 검사를 진행하지 않았는데, issue에 있는 enum 유효성을 검사하는 util을 생성하는 브랜치에서 작업할 계획입니다.
