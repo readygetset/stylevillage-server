@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
-import GetClothesReq from '../../type/getClothes/getClothes.req';
-import GetClothesRes from '../../type/getClothes/getClothes.res';
+import GetClothesReq from '../../type/clothes/getClothes.req';
+import GetClothesRes from '../../type/clothes/getClothes.res';
 import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
 import ClothesService from '../../service/clothes.service';
 import CreateClothesReq from '../../type/clothes/createClothes.req';
