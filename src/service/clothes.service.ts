@@ -5,7 +5,7 @@ import ModifyClothesReq from '../type/clothes/modifyClothes.req';
 import { UpdateResult } from 'typeorm';
 import GetClothesReq from '../type/getClothes/getClothes.req';
 import GetClothesRes from '../type/getClothes/getClothes.res';
-import { ForbiddenError } from '../util/customErrors';
+import { BadRequestError, ForbiddenError } from '../util/customErrors';
 
 export default class ClothesService {
   static async createClothes(clothesInfo: CreateClothesReq): Promise<Clothes> {
@@ -15,11 +15,17 @@ export default class ClothesService {
   }
 
   static async modifyClothes(
-    id: number,
+    userId: number,
+    closetId: number,
     clothesInfo: ModifyClothesReq,
   ): Promise<UpdateResult> {
-    await ClothesRepository.findOneByClothesId(id);
-    return await ClothesRepository.update({ id: id }, clothesInfo);
+    const clothes = await ClothesRepository.findOneByClothesId(closetId);
+
+    if (clothes.closet.owner.id != userId) {
+      throw new BadRequestError('본인의 옷만 수정할 수 있습니다.');
+    }
+
+    return await ClothesRepository.update({ id: closetId }, clothesInfo);
   }
 
   static async getClothes(
