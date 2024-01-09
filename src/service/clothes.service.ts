@@ -16,16 +16,16 @@ export default class ClothesService {
 
   static async modifyClothes(
     userId: number,
-    closetId: number,
+    clothesId: number,
     clothesInfo: ModifyClothesReq,
   ): Promise<UpdateResult> {
-    const clothes = await ClothesRepository.findOneByClothesId(closetId);
+    const clothes = await ClothesRepository.findOneByClothesId(clothesId);
 
     if (clothes.closet.owner.id != userId) {
       throw new BadRequestError('본인의 옷만 수정할 수 있습니다.');
     }
 
-    return await ClothesRepository.update({ id: closetId }, clothesInfo);
+    return await ClothesRepository.update({ id: clothesId }, clothesInfo);
   }
 
   static async getClothes(
