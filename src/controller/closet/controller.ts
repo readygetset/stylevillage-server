@@ -1,12 +1,11 @@
 import { RequestHandler } from 'express';
 import ClosetService from '../../service/closet.service';
-import PostClosetRes from '../../type/closet/postCloset.res';
 import getClosetRes from '../../type/closet/getCloset.res';
 import modifyClosetReq from '../../type/closet/modifyCloset.req';
-import modifyClosetRes from '../../type/closet/modifyCloset.res';
 import Closet from '../../type/closet/closet';
 import LoginUser from '../../type/user/loginUser';
 import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
+import DefaultRes from '../../type/default.res';
 
 export const postCloset: RequestHandler = async (req, res, next) => {
   try {
@@ -25,8 +24,10 @@ export const postCloset: RequestHandler = async (req, res, next) => {
     };
     await ClosetService.postCloset(closet);
 
-    const postClosetRes: PostClosetRes = { name };
-    res.json(postClosetRes);
+    const message: DefaultRes = {
+      message: '옷장이 등록되었습니다.',
+    };
+    res.json(message);
   } catch (error) {
     next(error);
   }
@@ -65,7 +66,7 @@ export const modifyCloset: RequestHandler = async (req, res, next) => {
 
     await ClosetService.modifyCloset(closet, user.id);
 
-    const message: modifyClosetRes = {
+    const message: DefaultRes = {
       message: '옷장 이름이 변경되었습니다.',
     };
     res.json(message);
