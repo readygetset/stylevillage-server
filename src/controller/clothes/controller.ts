@@ -4,14 +4,13 @@ import GetClothesRes from '../../type/clothes/getClothes.res';
 import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
 import ClothesService from '../../service/clothes.service';
 import CreateClothesReq from '../../type/clothes/createClothes.req';
-import CreateClothesRes from '../../type/clothes/createClothes.res';
 import LoginUser from '../../type/user/loginUser';
 import Category from '../../common/enum/category.enum';
 import Season from '../../common/enum/season.enum';
 import Status from '../../common/enum/status.enum';
 import ModifyClothesReq from '../../type/clothes/modifyClothes.req';
-import ModifyClothesRes from '../../type/clothes/modifyClothes.res';
 import isInEnum from '../../util/isInEnum';
+import DefaultRes from '../../type/default.res';
 
 export const createClothes: RequestHandler = async (req, res, next) => {
   try {
@@ -49,8 +48,8 @@ export const createClothes: RequestHandler = async (req, res, next) => {
 
     await ClothesService.createClothes(clothesInfo);
 
-    const creaetClothesRes: CreateClothesRes = { isSuccess: true };
-    res.json(creaetClothesRes);
+    const message: DefaultRes = { message: '옷 정보가 등록되었습니다.' };
+    res.json(message);
   } catch (error) {
     console.log('error in createClothes :', error);
     next(error);
@@ -125,8 +124,8 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
 
     await ClothesService.modifyClothes(user.id, clothesId, modifyClothesReq);
 
-    const modifyClothesRes: ModifyClothesRes = { isSuccess: true };
-    res.json(modifyClothesRes);
+    const message: DefaultRes = { message: '옷 정보가 수정되었습니다.' };
+    res.json(message);
   } catch (error) {
     next(error);
   }
