@@ -79,4 +79,15 @@ export default class ClosetService {
 
     return await ClosetRepository.update(closet.id, { name: closet.name });
   }
+
+  static async deleteCloset(
+    closetId: number,
+    userId: number,
+  ): Promise<UpdateResult> {
+    const ownerId = await ClosetRepository.getOwnerId(closetId);
+    if (ownerId != userId)
+      throw new BadRequestError('본인의 옷장만 삭제할 수 있습니다.');
+
+    return await ClosetRepository.softDelete(closetId);
+  }
 }
