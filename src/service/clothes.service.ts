@@ -40,4 +40,17 @@ export default class ClothesService {
       return getClothesRes;
     } else throw new ForbiddenError('공개되지 않은 옷입니다.');
   }
+
+  static async deleteClothes(
+    clothesId: number,
+    userId: number,
+  ): Promise<UpdateResult> {
+    const clothes = await ClothesRepository.findOneByClothesId(clothesId);
+
+    if (clothes.closet.owner.id != userId) {
+      throw new BadRequestError('본인의 옷만 삭제할 수 있습니다.');
+    }
+
+    return await ClothesRepository.softDelete(clothesId);
+  }
 }

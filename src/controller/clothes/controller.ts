@@ -130,3 +130,21 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteClothes: RequestHandler = async (req, res, next) => {
+  try {
+    const clothesId = Number(req.params.clothesId);
+    const user = req.user as LoginUser;
+
+    if (!user) throw new UnauthorizedError('로그인이 필요한 기능입니다.');
+
+    await ClothesService.deleteClothes(clothesId, user.id);
+
+    const message: DefaultRes = {
+      message: '옷이 삭제되었습니다.',
+    };
+    res.json(message);
+  } catch (error) {
+    next(error);
+  }
+};
