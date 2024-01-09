@@ -6,7 +6,10 @@ import getClosetRes from '../type/closet/getCloset.res';
 import getClosetClothes from '../type/clothes/getClosetClothes';
 import userRes from '../type/user/user.res';
 import PostClosetReq from '../type/closet/postCloset.req';
-import { DuplicateValueError } from '../util/customErrors';
+import modifyClosetReq from '../type/closet/modifyCloset.req';
+import { UpdateResult } from 'typeorm';
+import { BadRequestError, DuplicateValueError } from '../util/customErrors';
+import getClosetListRes from '../type/closet/getClosetList.res';
 
 export default class ClosetService {
   static async getCloset(
@@ -55,5 +58,25 @@ export default class ClosetService {
     if (isDuplicate) throw new DuplicateValueError('중복되는 옷장 이름입니다.');
     const newCloset = ClosetRepository.create(closet);
     return await ClosetRepository.save(newCloset);
+  }
+
+  static async getClosetList(userId: number): Promise<getClosetListRes> {
+    const closetInfo = await ClosetRepository.findByUserId(userId);
+    const closets = closetInfo.map((closet) => ({
+      id: closet.id,
+      name: closet.name,
+    }));
+    return { closets };
+  }
+
+  static async modifyCloset(
+    closet: modifyClosetReq,
+    userId: number,
+  ): Promise<UpdateResult> {
+    const ownerId = await ClosetRepository.getOwnerId(closet.id);
+    if (ownerId != userId)
+      throw new BadRequestError('본인의 옷장만 수정할 수 있습니다.');
+
+    return await ClosetRepository.update(closet.id, { name: closet.name });
   }
 }

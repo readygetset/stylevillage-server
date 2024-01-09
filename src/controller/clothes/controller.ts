@@ -1,14 +1,16 @@
 import { RequestHandler } from 'express';
-import GetClothesReq from '../../type/getClothes/getClothes.req';
-import GetClothesRes from '../../type/getClothes/getClothes.res';
+import GetClothesReq from '../../type/clothes/getClothes.req';
+import GetClothesRes from '../../type/clothes/getClothes.res';
 import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
 import ClothesService from '../../service/clothes.service';
 import CreateClothesReq from '../../type/clothes/createClothes.req';
-import CreateClothesRes from '../../type/clothes/createClothes.res';
 import LoginUser from '../../type/user/loginUser';
 import Category from '../../common/enum/category.enum';
 import Season from '../../common/enum/season.enum';
 import Status from '../../common/enum/status.enum';
+import ModifyClothesReq from '../../type/clothes/modifyClothes.req';
+import isInEnum from '../../util/isInEnum';
+import DefaultRes from '../../type/default.res';
 
 export const createClothes: RequestHandler = async (req, res, next) => {
   try {
@@ -23,18 +25,14 @@ export const createClothes: RequestHandler = async (req, res, next) => {
       throw new BadRequestError('closet,name are essential');
     }
 
-    //Todo 유효성 검사 기능 분리
-    if (category) {
-      if (!Object.values(Category).includes(category))
-        throw new BadRequestError('category is invalid');
+    if (category && !isInEnum(category, Category)) {
+      throw new BadRequestError('---');
     }
-    if (season) {
-      if (!Object.values(Season).includes(season))
-        throw new BadRequestError('season is invalid');
+    if (season && !isInEnum(season, Season)) {
+      throw new BadRequestError('---');
     }
-    if (status) {
-      if (!Object.values(Status).includes(status))
-        throw new BadRequestError('status is invalid');
+    if (status && !isInEnum(status, Status)) {
+      throw new BadRequestError('---');
     }
 
     const clothesInfo: CreateClothesReq = {
@@ -50,8 +48,8 @@ export const createClothes: RequestHandler = async (req, res, next) => {
 
     await ClothesService.createClothes(clothesInfo);
 
-    const creaetClothesRes: CreateClothesRes = { isSuccess: true };
-    res.json(creaetClothesRes);
+    const message: DefaultRes = { message: '옷 정보가 등록되었습니다.' };
+    res.json(message);
   } catch (error) {
     console.log('error in createClothes :', error);
     next(error);
@@ -73,6 +71,61 @@ export const getClothes: RequestHandler = async (req, res, next) => {
     );
 
     res.json(getClothesRes);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const modifyClothes: RequestHandler = async (req, res, next) => {
+  try {
+    const id = Number(req.params.clothesId);
+    const { closet, category, season, status, isOpen, name, tag, image } =
+      req.body;
+    const user = req.user as LoginUser;
+
+    if (!user) {
+      throw new UnauthorizedError('로그인이 필요한 기능입니다.');
+    }
+
+    if (
+      !closet &&
+      !category &&
+      !season &&
+      !status &&
+      !isOpen &&
+      !name &&
+      !tag &&
+      !image
+    ) {
+      throw new BadRequestError('수정할 항목을 입력해주세요.');
+    }
+
+    if (category && !isInEnum(category, Category)) {
+      throw new BadRequestError('---');
+    }
+    if (season && !isInEnum(season, Season)) {
+      throw new BadRequestError('---');
+    }
+    if (status && !isInEnum(status, Status)) {
+      throw new BadRequestError('---');
+    }
+
+    const clothesId: number = id;
+    const modifyClothesReq: ModifyClothesReq = {
+      closet,
+      category,
+      season,
+      status,
+      isOpen,
+      name,
+      tag,
+      image,
+    };
+
+    await ClothesService.modifyClothes(user.id, clothesId, modifyClothesReq);
+
+    const message: DefaultRes = { message: '옷 정보가 수정되었습니다.' };
+    res.json(message);
   } catch (error) {
     next(error);
   }

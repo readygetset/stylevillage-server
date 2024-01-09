@@ -1,20 +1,31 @@
 import Clothes from '../entity/clothes.entity';
 import CreateClothesReq from '../type/clothes/createClothes.req';
 import ClothesRepository from '../repository/clothes.repository';
-import GetClothesReq from '../type/getClothes/getClothes.req';
-import GetClothesRes from '../type/getClothes/getClothes.res';
-import { ForbiddenError } from '../util/customErrors';
+import ModifyClothesReq from '../type/clothes/modifyClothes.req';
+import { UpdateResult } from 'typeorm';
+import GetClothesReq from '../type/clothes/getClothes.req';
+import GetClothesRes from '../type/clothes/getClothes.res';
+import { BadRequestError, ForbiddenError } from '../util/customErrors';
 
 export default class ClothesService {
   static async createClothes(clothesInfo: CreateClothesReq): Promise<Clothes> {
-    try {
-      //Todo. image 유효성 검사
+    //Todo. image 유효성 검사
+    const newClothes = ClothesRepository.create(clothesInfo);
+    return await ClothesRepository.save(newClothes);
+  }
 
-      const newClothes = ClothesRepository.create(clothesInfo);
-      return await ClothesRepository.save(newClothes);
-    } catch (error) {
-      throw new Error(`error in createClothes : ${error}`);
+  static async modifyClothes(
+    userId: number,
+    closetId: number,
+    clothesInfo: ModifyClothesReq,
+  ): Promise<UpdateResult> {
+    const clothes = await ClothesRepository.findOneByClothesId(closetId);
+
+    if (clothes.closet.owner.id != userId) {
+      throw new BadRequestError('본인의 옷만 수정할 수 있습니다.');
     }
+
+    return await ClothesRepository.update({ id: closetId }, clothesInfo);
   }
 
   static async getClothes(
