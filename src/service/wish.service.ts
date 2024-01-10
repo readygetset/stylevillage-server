@@ -1,5 +1,7 @@
 import Wish from '../entity/wish.entity';
+import { UpdateResult } from 'typeorm';
 import CreateWishReq from '../type/wish/createWish.req';
+import DeleteWishReq from '../type/wish/deleteWish.req';
 import ClothesRepository from '../repository/clothes.repository';
 import UserRepository from '../repository/user.repository';
 import WishRepository from '../repository/wish.repository';
@@ -29,30 +31,15 @@ export default class WishService {
     return await WishRepository.save(newWish);
   }
 
-  static async deleteWish(
-    wishInfo: CreateWishReq,
-    username: string,
-  ): Promise<Wish> {
-    const isWished = wishInfo.isWished;
+  static async deleteWish(wishInfo: DeleteWishReq): Promise<UpdateResult> {
+    const { wishId, isWished } = wishInfo;
 
     if (!isWished) {
       throw new BadRequestError('찜하지 않은 옷입니다.');
     }
 
-    const clothes = await ClothesRepository.findOneByClothesId(
-      wishInfo.clothesId,
-    );
-    const user = await UserRepository.findOneByUsername(username);
+    await WishRepository.findWishById(wishId);
 
-    //test for softDelete
-    //const id = 4;
-    //const wish = await WishRepository.findWishById(id);
-    const wish = await WishRepository.findWishByData(user, clothes, isWished);
-
-    if (!wish.id)
-      throw new BadRequestError('해당 옷에 대한 찜 정보를 찾을 수 없습니다.');
-    await WishRepository.softDelete(wish.id);
-
-    return wish;
+    return await WishRepository.softDelete(wishId);
   }
 }
