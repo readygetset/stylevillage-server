@@ -16,6 +16,11 @@ export default class Clothes extends BaseTime {
   })
   closet?: Closet;
 
+  @ManyToOne(() => User, {
+    cascade: ['insert', 'recover', 'update'],
+  })
+  owner!: User;
+
   @Column({
     type: 'enum',
     enum: Category,
@@ -72,9 +77,4 @@ export default class Clothes extends BaseTime {
     comment: '이미지',
   })
   image?: string;
-
-  @ManyToOne(() => User, {
-    cascade: ['insert', 'recover', 'update'],
-  })
-  owner!: User;
 }

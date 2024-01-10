@@ -1,13 +1,13 @@
-import Clothes from '../entity/clothes.entity';
+import Clothes from '../type/clothes/Clothes';
 import User from '../entity/user.entity';
 import CreateClothesReq from '../type/clothes/createClothes.req';
 import ClothesRepository from '../repository/clothes.repository';
-import UserRepository from '../repository/user.repository';
 import ModifyClothesReq from '../type/clothes/modifyClothes.req';
 import { UpdateResult } from 'typeorm';
 import GetClothesReq from '../type/clothes/getClothes.req';
 import GetClothesRes from '../type/clothes/getClothes.res';
 import { BadRequestError, ForbiddenError } from '../util/customErrors';
+import UserRepository from '../repository/user.repository';
 
 export default class ClothesService {
   static async createClothes(
@@ -15,10 +15,20 @@ export default class ClothesService {
     userId: number,
   ): Promise<Clothes> {
     //Todo. image 유효성 검사
-    const userInfo: User = (await UserRepository.findOneByUserId(
-      userId,
-    )) as User;
-    const newClothes = ClothesRepository.create(clothesInfo);
+    const userInfo = (await UserRepository.findOneByUserId(userId)) as User;
+    const clothes: Clothes = {
+      closet: clothesInfo.closet,
+      category: clothesInfo.category,
+      season: clothesInfo.season,
+      status: clothesInfo.status,
+      isOpen: clothesInfo.isOpen,
+      name: clothesInfo.name,
+      tag: clothesInfo.tag,
+      image: clothesInfo.image,
+      owner: userInfo,
+    };
+
+    const newClothes: Clothes = ClothesRepository.create(clothes);
     return await ClothesRepository.save(newClothes);
   }
 

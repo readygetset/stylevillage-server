@@ -10,7 +10,7 @@ export default class ApplyService {
   ): Promise<UpdateResult> {
     const apply = await ApplyRepository.findOneByApplyId(approveApplyReq.id);
 
-    if (userId != apply.clothes.closet.owner.id) {
+    if (userId != apply.clothes.owner.id) {
       throw new UnauthorizedError(
         '본인의 옷에 대한 대여신청만 수락할 수 있습니다.',
       );

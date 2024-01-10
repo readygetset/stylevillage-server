@@ -15,7 +15,7 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
 
   async findByClosetId(closetId: number): Promise<Clothes[]> {
     return this.find({
-      where: { id: closetId, isOpen: true },
+      where: { closet: { id: closetId }, isOpen: true },
     });
   },
 
@@ -25,8 +25,8 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
   ): Promise<Clothes[]> {
     return this.find({
       where: [
-        { id: closetId, isOpen: true },
-        { id: closetId, owner: { id: userId } },
+        { closet: { id: closetId }, isOpen: true },
+        { closet: { id: closetId }, owner: { id: userId } },
       ],
     });
   },
