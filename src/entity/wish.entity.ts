@@ -4,7 +4,7 @@ import User from './user.entity';
 import Clothes from './clothes.entity';
 
 @Entity()
-export default class Like extends BaseTime {
+export default class Wish extends BaseTime {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -24,5 +24,5 @@ export default class Like extends BaseTime {
     nullable: false,
     comment: '찜 여부',
   })
-  isLiked!: boolean;
+  isWished!: boolean;
 }
