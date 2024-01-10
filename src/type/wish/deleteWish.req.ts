@@ -1,4 +1,4 @@
-export default interface CreateWishReq {
+export default interface DeleteWishReq {
   clothesId: number;
   wishId: number;
   isWished: boolean;
