@@ -27,7 +27,7 @@ export const createClothes: RequestHandler = async (req, res, next) => {
     }
 
     if (category && !isInEnum(category, Category)) {
-      throw new BadRequestError(`${category} is not in Cateogry`);
+      throw new BadRequestError(`${category} is not in Category`);
     }
     if (season && !isInEnum(season, Season)) {
       throw new BadRequestError(`${season} is not in Season`);
@@ -102,7 +102,7 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
     }
 
     if (category && !isInEnum(category, Category)) {
-      throw new BadRequestError(`${category} is not in Cateogry`);
+      throw new BadRequestError(`${category} is not in Category`);
     }
     if (season && !isInEnum(season, Season)) {
       throw new BadRequestError(`${season} is not in Season`);
