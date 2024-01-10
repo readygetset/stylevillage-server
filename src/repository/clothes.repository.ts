@@ -1,6 +1,7 @@
 import AppDataSource from '../config/dataSource';
 import Clothes from '../entity/clothes.entity';
 import { BadRequestError } from '../util/customErrors';
+import { UpdateResult } from 'typeorm';
 
 const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
   async findOneByClothesId(id: number): Promise<Clothes> {
@@ -13,7 +14,7 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
     });
   },
 
-  async findByClosetId(closetId: number): Promise<Clothes[]> {
+  async findOpenByClosetId(closetId: number): Promise<Clothes[]> {
     return this.find({
       where: { id: closetId, isOpen: true },
     });
@@ -29,6 +30,14 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
         { id: closetId, closet: { owner: { id: userId } } },
       ],
     });
+  },
+
+  async updateAllClosetId(closetId: number): Promise<UpdateResult> {
+    return AppDataSource.createQueryBuilder()
+      .update(Clothes)
+      .set({ closet: null })
+      .where({ closet: { id: closetId } })
+      .execute();
   },
 });
 
