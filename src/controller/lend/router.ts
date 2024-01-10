@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { approveApply, rejectApply } from './controller';
+import { approveApply, getMyLends, rejectApply } from './controller';
 
 const lendRouter = Router();
 
 lendRouter.put('/:applyId', approveApply);
 lendRouter.patch('/:applyId', rejectApply);
+lendRouter.get('/', getMyLends);
 
 export default lendRouter;
