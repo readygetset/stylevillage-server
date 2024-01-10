@@ -21,6 +21,14 @@ const UserRepository = AppDataSource.getRepository(User).extend({
       return user;
     });
   },
+
+  async findOneByUserId(id: number): Promise<User> {
+    return this.findOne({ where: { id } }).then((user) => {
+      if (!user)
+        throw new BadRequestError('유저 정보를 불러오는 데 실패하였습니다.');
+      return user;
+    });
+  },
 });
 
 export default UserRepository;
