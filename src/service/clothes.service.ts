@@ -1,6 +1,8 @@
 import Clothes from '../entity/clothes.entity';
+import User from '../entity/user.entity';
 import CreateClothesReq from '../type/clothes/createClothes.req';
 import ClothesRepository from '../repository/clothes.repository';
+import UserRepository from '../repository/user.repository';
 import ModifyClothesReq from '../type/clothes/modifyClothes.req';
 import { UpdateResult } from 'typeorm';
 import GetClothesReq from '../type/clothes/getClothes.req';
@@ -8,8 +10,14 @@ import GetClothesRes from '../type/clothes/getClothes.res';
 import { BadRequestError, ForbiddenError } from '../util/customErrors';
 
 export default class ClothesService {
-  static async createClothes(clothesInfo: CreateClothesReq): Promise<Clothes> {
+  static async createClothes(
+    clothesInfo: CreateClothesReq,
+    userId: number,
+  ): Promise<Clothes> {
     //Todo. image 유효성 검사
+    const userInfo: User = (await UserRepository.findOneByUserId(
+      userId,
+    )) as User;
     const newClothes = ClothesRepository.create(clothesInfo);
     return await ClothesRepository.save(newClothes);
   }
@@ -21,7 +29,7 @@ export default class ClothesService {
   ): Promise<UpdateResult> {
     const clothes = await ClothesRepository.findOneByClothesId(clothesId);
 
-    if (clothes.closet.owner.id != userId) {
+    if (clothes.owner.id != userId) {
       throw new BadRequestError('본인의 옷만 수정할 수 있습니다.');
     }
 
@@ -35,7 +43,7 @@ export default class ClothesService {
     const { clothesId } = id;
     const clothes = await ClothesRepository.findOneByClothesId(clothesId);
 
-    if (clothes.isOpen || (userId && userId === clothes.closet.owner.id)) {
+    if (clothes.isOpen || (userId && userId === clothes.owner.id)) {
       const getClothesRes: GetClothesRes = clothes;
       return getClothesRes;
     } else throw new ForbiddenError('공개되지 않은 옷입니다.');
@@ -47,7 +55,7 @@ export default class ClothesService {
   ): Promise<UpdateResult> {
     const clothes = await ClothesRepository.findOneByClothesId(clothesId);
 
-    if (clothes.closet.owner.id != userId) {
+    if (clothes.owner.id != userId) {
       throw new BadRequestError('본인의 옷만 삭제할 수 있습니다.');
     }
 

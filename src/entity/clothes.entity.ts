@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import BaseTime from './baseTime.entity';
 import Closet from './closet.entity';
+import User from './user.entity';
 import Category from '../common/enum/category.enum';
 import Season from '../common/enum/season.enum';
 import Status from '../common/enum/status.enum';
@@ -13,7 +14,7 @@ export default class Clothes extends BaseTime {
   @ManyToOne(() => Closet, {
     cascade: ['insert', 'recover', 'update'],
   })
-  closet!: Closet;
+  closet?: Closet;
 
   @Column({
     type: 'enum',
@@ -71,4 +72,9 @@ export default class Clothes extends BaseTime {
     comment: '이미지',
   })
   image?: string;
+
+  @ManyToOne(() => User, {
+    cascade: ['insert', 'recover', 'update'],
+  })
+  owner!: User;
 }
