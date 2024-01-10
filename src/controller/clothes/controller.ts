@@ -27,13 +27,13 @@ export const createClothes: RequestHandler = async (req, res, next) => {
     }
 
     if (category && !isInEnum(category, Category)) {
-      throw new BadRequestError(`${category} is not in ${Category}`);
+      throw new BadRequestError(`${category} is not in Cateogry`);
     }
     if (season && !isInEnum(season, Season)) {
-      throw new BadRequestError(`${season} is not in ${Season}`);
+      throw new BadRequestError(`${season} is not in Season`);
     }
     if (status && !isInEnum(status, Status)) {
-      throw new BadRequestError(`${status} is not in ${Status}`);
+      throw new BadRequestError(`${status} is not in Status`);
     }
 
     const clothesInfo: CreateClothesReq = {
@@ -102,13 +102,13 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
     }
 
     if (category && !isInEnum(category, Category)) {
-      throw new BadRequestError(`${category} is not in ${Category}`);
+      throw new BadRequestError(`${category} is not in Cateogry`);
     }
     if (season && !isInEnum(season, Season)) {
-      throw new BadRequestError(`${season} is not in ${Season}`);
+      throw new BadRequestError(`${season} is not in Season`);
     }
     if (status && !isInEnum(status, Status)) {
-      throw new BadRequestError(`${status} is not in ${Status}`);
+      throw new BadRequestError(`${status} is not in Status`);
     }
 
     const clothesId: number = id;
