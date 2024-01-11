@@ -16,23 +16,24 @@ export const createClothes: RequestHandler = async (req, res, next) => {
   try {
     const { closet, category, season, status, isOpen, name, tag, image } =
       req.body;
+    const user = req.user as LoginUser;
 
-    if (!req.user) {
+    if (!user) {
       throw new UnauthorizedError('로그인이 필요한 기능입니다.');
     }
 
-    if (!closet || !name) {
-      throw new BadRequestError('closet,name are essential');
+    if (!name) {
+      throw new BadRequestError('name are essential');
     }
 
     if (category && !isInEnum(category, Category)) {
-      throw new BadRequestError(`${category} is not in ${Category}`);
+      throw new BadRequestError(`${category} is not in Category`);
     }
     if (season && !isInEnum(season, Season)) {
-      throw new BadRequestError(`${season} is not in ${Season}`);
+      throw new BadRequestError(`${season} is not in Season`);
     }
     if (status && !isInEnum(status, Status)) {
-      throw new BadRequestError(`${status} is not in ${Status}`);
+      throw new BadRequestError(`${status} is not in Status`);
     }
 
     const clothesInfo: CreateClothesReq = {
@@ -46,7 +47,7 @@ export const createClothes: RequestHandler = async (req, res, next) => {
       image,
     };
 
-    await ClothesService.createClothes(clothesInfo);
+    await ClothesService.createClothes(clothesInfo, user.id);
 
     const message: DefaultRes = { message: '옷 정보가 등록되었습니다.' };
     res.json(message);
@@ -101,13 +102,13 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
     }
 
     if (category && !isInEnum(category, Category)) {
-      throw new BadRequestError(`${category} is not in ${Category}`);
+      throw new BadRequestError(`${category} is not in Category`);
     }
     if (season && !isInEnum(season, Season)) {
-      throw new BadRequestError(`${season} is not in ${Season}`);
+      throw new BadRequestError(`${season} is not in Season`);
     }
     if (status && !isInEnum(status, Status)) {
-      throw new BadRequestError(`${status} is not in ${Status}`);
+      throw new BadRequestError(`${status} is not in Status`);
     }
 
     const clothesId: number = id;
