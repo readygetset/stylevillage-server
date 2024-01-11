@@ -1,14 +1,21 @@
 import AppDataSource from '../config/dataSource';
 import Wish from '../entity/wish.entity';
-import { BadRequestError } from '../util/customErrors';
+import User from '../entity/user.entity';
+import Clothes from '../entity/clothes.entity';
 
 const WishRepository = AppDataSource.getRepository(Wish).extend({
-  async findWishById(id: number): Promise<Wish> {
+  async findWishByData(
+    user: User,
+    clothes: Clothes,
+    isWished: boolean,
+  ): Promise<Wish | null> {
     return this.findOne({
-      where: { id: id },
+      where: {
+        user: { id: user.id },
+        clothes: { id: clothes.id },
+        isWished: isWished,
+      },
     }).then((wish) => {
-      if (!wish)
-        throw new BadRequestError('해당 옷에 대한 찜 정보를 찾을 수 없습니다.');
       return wish;
     });
   },

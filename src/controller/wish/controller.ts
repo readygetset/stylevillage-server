@@ -2,7 +2,6 @@ import { RequestHandler } from 'express';
 import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
 import WishService from '../../service/wish.service';
 import CreateWishReq from '../../type/wish/createWish.req';
-import DeleteWishReq from '../../type/wish/deleteWish.req';
 import DefaultRes from '../../type/default.res';
 import LoginUser from '../../type/user/loginUser';
 
@@ -10,7 +9,7 @@ export const createWish: RequestHandler = async (req, res, next) => {
   try {
     const clothesId = Number(req.params.clothesId);
 
-    if (!clothesId) throw new BadRequestError('ClothesId is required.');
+    if (!clothesId) throw new BadRequestError('찜할 옷 항목이 없습니다.');
 
     const user = req.user as LoginUser;
 
@@ -18,11 +17,8 @@ export const createWish: RequestHandler = async (req, res, next) => {
       throw new UnauthorizedError('로그인이 필요한 기능입니다.');
     }
 
-    const { isWished } = req.body;
-
     const wishInfo: CreateWishReq = {
       clothesId,
-      isWished,
     };
 
     await WishService.createWish(wishInfo, user.username);
@@ -37,10 +33,9 @@ export const createWish: RequestHandler = async (req, res, next) => {
 export const deleteWish: RequestHandler = async (req, res, next) => {
   try {
     const clothesId = Number(req.params.clothesId);
-    const { isWished, wishId } = req.body;
 
-    if (!clothesId) throw new BadRequestError('ClothesId is required.');
-    if (!wishId) throw new BadRequestError('WishId is required.');
+    if (!clothesId)
+      throw new BadRequestError('찜을 삭제할 옷 항목이 없습니다.');
 
     const user = req.user as LoginUser;
 
@@ -48,13 +43,11 @@ export const deleteWish: RequestHandler = async (req, res, next) => {
       throw new UnauthorizedError('로그인이 필요한 기능입니다.');
     }
 
-    const wishInfo: DeleteWishReq = {
+    const wishInfo: CreateWishReq = {
       clothesId,
-      wishId,
-      isWished,
     };
 
-    await WishService.deleteWish(wishInfo);
+    await WishService.deleteWish(wishInfo, user.username);
 
     const message: DefaultRes = { message: '찜이 삭제되었습니다.' };
     res.json(message);
