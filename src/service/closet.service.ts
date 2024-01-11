@@ -8,7 +8,7 @@ import userRes from '../type/user/user.res';
 import PostClosetReq from '../type/closet/postCloset.req';
 import modifyClosetReq from '../type/closet/modifyCloset.req';
 import { UpdateResult } from 'typeorm';
-import { BadRequestError, DuplicateValueError } from '../util/customErrors';
+import { BadRequestError } from '../util/customErrors';
 import getClosetListRes from '../type/closet/getClosetList.res';
 
 export default class ClosetService {
@@ -51,11 +51,6 @@ export default class ClosetService {
   }
 
   static async postCloset(closet: PostClosetReq): Promise<Closet> {
-    const isDuplicate = await ClosetRepository.checkDuplicateCloset(
-      closet.name,
-    );
-
-    if (isDuplicate) throw new DuplicateValueError('중복되는 옷장 이름입니다.');
     const newCloset = ClosetRepository.create(closet);
     return await ClosetRepository.save(newCloset);
   }
