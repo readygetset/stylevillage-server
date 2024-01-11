@@ -11,6 +11,7 @@ import Status from '../../common/enum/status.enum';
 import ModifyClothesReq from '../../type/clothes/modifyClothes.req';
 import isInEnum from '../../util/isInEnum';
 import DefaultRes from '../../type/default.res';
+import GetWishListRes from '../../type/clothes/getWishList.res';
 
 export const createClothes: RequestHandler = async (req, res, next) => {
   try {
@@ -145,6 +146,21 @@ export const deleteClothes: RequestHandler = async (req, res, next) => {
       message: '옷이 삭제되었습니다.',
     };
     res.json(message);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getWishList: RequestHandler = async (req, res, next) => {
+  try {
+    const user = req.user as LoginUser;
+
+    if (!user) {
+      throw new UnauthorizedError('로그인이 필요한 기능입니다.');
+    }
+
+    const wishList: GetWishListRes = await ClothesService.getWishList(user.id);
+    res.json(wishList);
   } catch (error) {
     next(error);
   }
