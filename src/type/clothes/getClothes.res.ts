@@ -15,4 +15,5 @@ export default interface GetClothesRes {
   tag?: string;
   image?: string;
   owner: UserRes;
+  isWished: boolean;
 }

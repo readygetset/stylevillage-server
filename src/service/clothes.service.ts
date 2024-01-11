@@ -8,6 +8,7 @@ import GetClothesReq from '../type/clothes/getClothes.req';
 import GetClothesRes from '../type/clothes/getClothes.res';
 import { BadRequestError, ForbiddenError } from '../util/customErrors';
 import UserRepository from '../repository/user.repository';
+import WishRepository from '../repository/wish.repository';
 
 export default class ClothesService {
   static async createClothes(
@@ -16,6 +17,7 @@ export default class ClothesService {
   ): Promise<Clothes> {
     //Todo. image 유효성 검사
     const userInfo = (await UserRepository.findOneByUserId(userId)) as User;
+
     const clothes: Clothes = {
       closet: clothesInfo.closet,
       category: clothesInfo.category,
@@ -62,7 +64,30 @@ export default class ClothesService {
     const clothes = await ClothesRepository.findOneByClothesId(clothesId);
 
     if (clothes.isOpen || (userId && userId === clothes.owner.id)) {
-      const getClothesRes: GetClothesRes = clothes;
+      let isWished = false;
+
+      if (userId) {
+        const user = await UserRepository.findOneByUserId(userId);
+        const wish = await WishRepository.findWishByData(user, clothes, true);
+        if (wish) {
+          isWished = true;
+        }
+      }
+
+      const getClothesRes: GetClothesRes = {
+        id: clothes.id,
+        closet: clothes.closet,
+        category: clothes.category,
+        season: clothes.season,
+        status: clothes.status,
+        isOpen: clothes.isOpen,
+        name: clothes.name,
+        tag: clothes.tag,
+        image: clothes.image,
+        owner: clothes.owner,
+        isWished: isWished,
+      };
+
       return getClothesRes;
     } else throw new ForbiddenError('공개되지 않은 옷입니다.');
   }
