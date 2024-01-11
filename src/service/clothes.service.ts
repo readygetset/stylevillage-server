@@ -114,7 +114,6 @@ export default class ClothesService {
       return wish.clothes;
     });
     const wishList = await Promise.all(wishListPromises);
-    //    wishList.sort((a, b) => b.createdAt - a.createdAt);
     return { wishList };
   }
 }
