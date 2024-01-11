@@ -12,7 +12,7 @@ export default class LendService {
 
     if (loanee.id != userId) {
       throw new UnauthorizedError(
-        '본인이 빌렸던 대역내역에 대해서만 후기를 작성할 수 있습니다.',
+        '본인이 빌렸던 대여내역에 대해서만 후기를 작성할 수 있습니다.',
       );
     }
     return await LendRepository.update({ id: lendId }, { review });
