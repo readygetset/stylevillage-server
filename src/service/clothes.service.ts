@@ -8,7 +8,6 @@ import GetClothesReq from '../type/clothes/getClothes.req';
 import GetClothesRes from '../type/clothes/getClothes.res';
 import { BadRequestError, ForbiddenError } from '../util/customErrors';
 import UserRepository from '../repository/user.repository';
-import ClosetService from './closet.service';
 
 export default class ClothesService {
   static async createClothes(
@@ -29,13 +28,8 @@ export default class ClothesService {
       owner: userInfo,
     };
 
-    if (clothesInfo.closet) {
-      const closetList = await ClosetService.getClosetList(userId);
-      if (
-        !closetList.closets.some((closet) => closet.id === clothesInfo.closet)
-      ) {
-        throw new BadRequestError('본인의 옷장만 지정할 수 있습니다.');
-      }
+    if (clothesInfo.closet && clothesInfo.closet?.owner.id != userId) {
+      throw new BadRequestError('본인의 옷장만 지정할 수 있습니다.');
     }
 
     const newClothes: Clothes = ClothesRepository.create(clothes);
@@ -53,13 +47,8 @@ export default class ClothesService {
       throw new BadRequestError('본인의 옷만 수정할 수 있습니다.');
     }
 
-    if (clothesInfo.closet) {
-      const closetList = await ClosetService.getClosetList(userId);
-      if (
-        !closetList.closets.some((closet) => closet.id === clothesInfo.closet)
-      ) {
-        throw new BadRequestError('본인의 옷장만 지정할 수 있습니다.');
-      }
+    if (clothesInfo.closet && clothesInfo.closet?.owner.id != userId) {
+      throw new BadRequestError('본인의 옷장만 지정할 수 있습니다.');
     }
 
     return await ClothesRepository.update({ id: clothesId }, clothesInfo);
