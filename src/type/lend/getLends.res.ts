@@ -1,5 +1,5 @@
 import Clothes from '../../entity/clothes.entity';
-import User from '../../entity/user.entity';
+import UserRes from '../user/user.res';
 
 export default interface getLendsRes {
   id?: number;
@@ -7,7 +7,7 @@ export default interface getLendsRes {
   price: number;
   startDate: Date;
   endDate: Date;
-  lender: User;
-  loanee: User;
+  lender: UserRes;
+  loanee: UserRes;
   review?: string;
 }

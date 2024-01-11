@@ -3,7 +3,6 @@ import ApplyService from '../../service/apply.service';
 import LendService from '../../service/lend.service';
 import LoginUser from '../../type/user/loginUser';
 import DefaultRes from '../../type/default.res';
-import getLendsRes from '../../type/lend/getLends.res';
 import { UnauthorizedError } from '../../util/customErrors';
 
 export const approveApply: RequestHandler = async (req, res, next) => {
@@ -48,12 +47,9 @@ export const getMyLends: RequestHandler = async (req, res, next) => {
     if (!user) {
       throw new UnauthorizedError('로그인이 필요한 기능입니다.');
     }
-    const lendsAsLender: getLendsRes[] = await LendService.getLendsAsLender(
-      user.id,
-    );
-    const lendsAsLoanee: getLendsRes[] = await LendService.getLendAsLoanee(
-      user.id,
-    );
+    const lendsAsLender = await LendService.getLendsAsLender(user.id);
+    const lendsAsLoanee = await LendService.getLendAsLoanee(user.id);
+
     res.json({ lendsAsLender, lendsAsLoanee });
   } catch (error) {
     next(error);
