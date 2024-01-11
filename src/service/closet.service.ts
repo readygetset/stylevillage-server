@@ -88,7 +88,10 @@ export default class ClosetService {
     if (ownerId != userId)
       throw new BadRequestError('본인의 옷장만 삭제할 수 있습니다.');
 
-    await ClothesRepository.updateAllClosetId(closetId);
+    await ClothesRepository.update(
+      { closet: { id: closetId } },
+      { closet: undefined },
+    );
 
     return await ClosetRepository.softDelete(closetId);
   }
