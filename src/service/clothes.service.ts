@@ -28,6 +28,10 @@ export default class ClothesService {
       owner: userInfo,
     };
 
+    if (clothesInfo.closet && clothesInfo.closet?.owner.id != userId) {
+      throw new BadRequestError('본인의 옷장만 지정할 수 있습니다.');
+    }
+
     const newClothes: Clothes = ClothesRepository.create(clothes);
     return await ClothesRepository.save(newClothes);
   }
@@ -41,6 +45,10 @@ export default class ClothesService {
 
     if (clothes.owner.id != userId) {
       throw new BadRequestError('본인의 옷만 수정할 수 있습니다.');
+    }
+
+    if (clothesInfo.closet && clothesInfo.closet?.owner.id != userId) {
+      throw new BadRequestError('본인의 옷장만 지정할 수 있습니다.');
     }
 
     return await ClothesRepository.update({ id: clothesId }, clothesInfo);
