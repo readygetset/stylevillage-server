@@ -16,13 +16,6 @@ const ClosetRepository = AppDataSource.getRepository(Closet).extend({
     return this.find({ where: { owner: { id: userId } } });
   },
 
-  async checkDuplicateCloset(name: string): Promise<boolean> {
-    return this.findOneBy({ name }).then((closet) => {
-      if (closet) return true;
-      return false;
-    });
-  },
-
   async getOwnerId(id: number): Promise<number | undefined> {
     const closet = await this.findOneByClosetId(id);
     return closet.owner.id;
