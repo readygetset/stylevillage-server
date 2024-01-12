@@ -18,7 +18,7 @@ export default class ClosetService {
   ): Promise<getClosetRes> {
     const closet: Closet = await ClosetRepository.findOneByClosetId(closetId);
     const clothes: Clothes[] = !userId
-      ? await ClothesRepository.findByClosetId(closetId)
+      ? await ClothesRepository.findOpenByClosetId(closetId)
       : await ClothesRepository.findVisibleByClosetId(closetId, userId);
 
     const clothesInfo: Array<getClosetClothes> = clothes.map((clothes) => {
@@ -78,5 +78,21 @@ export default class ClosetService {
       throw new BadRequestError('본인의 옷장만 수정할 수 있습니다.');
 
     return await ClosetRepository.update(closet.id, { name: closet.name });
+  }
+
+  static async deleteCloset(
+    closetId: number,
+    userId: number,
+  ): Promise<UpdateResult> {
+    const ownerId = await ClosetRepository.getOwnerId(closetId);
+    if (ownerId != userId)
+      throw new BadRequestError('본인의 옷장만 삭제할 수 있습니다.');
+
+    await ClothesRepository.update(
+      { closet: { id: closetId } },
+      { closet: undefined },
+    );
+
+    return await ClosetRepository.softDelete(closetId);
   }
 }
