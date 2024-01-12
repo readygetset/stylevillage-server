@@ -1,8 +1,14 @@
 import { UpdateResult } from 'typeorm';
 import ApplyRepository from '../repository/apply.repository';
 import { UnauthorizedError } from '../util/customErrors';
+import createApplyReq from '../type/apply/createApply.req';
+import Apply from '../entity/apply.entity';
 
 export default class ApplyService {
+  static async createApply(applyInfo: createApplyReq): Promise<Apply> {
+    const newApply = ApplyRepository.create(applyInfo);
+    return await ApplyRepository.save(newApply);
+  }
   static async approveApply(
     applyId: number,
     userId: number,
