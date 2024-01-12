@@ -6,6 +6,7 @@ import clothesRouter from './clothes/router';
 import lendRouter from './lend/router';
 import reviewRouter from './review/router';
 import applyRouter from './apply/router';
+import wishRouter from './wish/router';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/clothes', clothesRouter);
 router.use('/lend', lendRouter);
 router.use('/review', reviewRouter);
 router.use('/apply', applyRouter);
+router.use('/wish', wishRouter);
 
 export default router;
