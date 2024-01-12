@@ -9,16 +9,19 @@ import { BadRequestError } from '../util/customErrors';
 export default class WishService {
   static async createWish(
     wishInfo: CreateWishReq,
-    username: string,
+    userId: number,
   ): Promise<UpdateResult | Wish> {
-    const clothes = await ClothesRepository.findOneByClothesId(
+    const wish = await WishRepository.findWishByData(
+      userId,
       wishInfo.clothesId,
+      false,
     );
-    const user = await UserRepository.findOneByUsername(username);
-
-    const wish = await WishRepository.findWishByData(user, clothes, false);
 
     if (!wish) {
+      const clothes = await ClothesRepository.findOneByClothesId(
+        wishInfo.clothesId,
+      );
+      const user = await UserRepository.findOneByUserId(userId);
       const newWish = WishRepository.create({
         user: user,
         clothes: clothes,
@@ -33,13 +36,13 @@ export default class WishService {
 
   static async deleteWish(
     wishInfo: CreateWishReq,
-    username: string,
+    userId: number,
   ): Promise<UpdateResult> {
-    const clothes = await ClothesRepository.findOneByClothesId(
+    const wish = await WishRepository.findWishByData(
+      userId,
       wishInfo.clothesId,
+      true,
     );
-    const user = await UserRepository.findOneByUsername(username);
-    const wish = await WishRepository.findWishByData(user, clothes, true);
 
     if (!wish)
       throw new BadRequestError('해당 옷에 대한 찜 정보를 찾을 수 없습니다.');

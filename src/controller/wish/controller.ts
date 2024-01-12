@@ -21,7 +21,7 @@ export const createWish: RequestHandler = async (req, res, next) => {
       clothesId,
     };
 
-    await WishService.createWish(wishInfo, user.username);
+    await WishService.createWish(wishInfo, user.id);
 
     const message: DefaultRes = { message: '찜이 생성되었습니다.' };
     res.json(message);
@@ -47,7 +47,7 @@ export const deleteWish: RequestHandler = async (req, res, next) => {
       clothesId,
     };
 
-    await WishService.deleteWish(wishInfo, user.username);
+    await WishService.deleteWish(wishInfo, user.id);
 
     const message: DefaultRes = { message: '찜이 삭제되었습니다.' };
     res.json(message);

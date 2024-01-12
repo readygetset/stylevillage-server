@@ -1,22 +1,18 @@
 import AppDataSource from '../config/dataSource';
 import Wish from '../entity/wish.entity';
-import User from '../entity/user.entity';
-import Clothes from '../entity/clothes.entity';
 
 const WishRepository = AppDataSource.getRepository(Wish).extend({
   async findWishByData(
-    user: User,
-    clothes: Clothes,
+    userId: number,
+    clothesId: number,
     isWished: boolean,
   ): Promise<Wish | null> {
     return this.findOne({
       where: {
-        user: { id: user.id },
-        clothes: { id: clothes.id },
+        user: { id: userId },
+        clothes: { id: clothesId },
         isWished: isWished,
       },
-    }).then((wish) => {
-      return wish;
     });
   },
 });
