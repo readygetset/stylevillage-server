@@ -9,7 +9,6 @@ import GetClothesRes from '../type/clothes/getClothes.res';
 import { BadRequestError, ForbiddenError } from '../util/customErrors';
 import UserRepository from '../repository/user.repository';
 import WishRepository from '../repository/wish.repository';
-import GetWishListRes from '../type/clothes/getWishList.res';
 
 export default class ClothesService {
   static async createClothes(
@@ -104,16 +103,5 @@ export default class ClothesService {
     }
 
     return await ClothesRepository.softDelete(clothesId);
-  }
-
-  static async getWishList(userId: number): Promise<GetWishListRes> {
-    const wishesInfo = await WishRepository.findWishesByUser(userId);
-    const wishListPromises = wishesInfo.map(async (wish) => {
-      if (!wish.clothes)
-        throw new BadRequestError('찜 목록에 존재하지 않는 옷이 있습니다');
-      return wish.clothes;
-    });
-    const wishList = await Promise.all(wishListPromises);
-    return { wishList };
   }
 }
