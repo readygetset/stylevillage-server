@@ -43,9 +43,7 @@ export const deleteWish: RequestHandler = async (req, res, next) => {
       throw new UnauthorizedError('로그인이 필요한 기능입니다.');
     }
 
-    const wishInfo: CreateWishReq = {
-      clothesId,
-    };
+    const wishInfo: CreateWishReq = { clothesId };
 
     await WishService.deleteWish(wishInfo, user.id);
 
