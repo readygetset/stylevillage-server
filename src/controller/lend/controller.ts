@@ -1,40 +1,45 @@
 import { RequestHandler } from 'express';
-import ApplyService from '../../service/apply.service';
 import LendService from '../../service/lend.service';
 import LoginUser from '../../type/user/loginUser';
 import DefaultRes from '../../type/default.res';
-import { UnauthorizedError } from '../../util/customErrors';
+import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
+import UserRepository from '../../repository/user.repository';
+import ClothesRepository from '../../repository/clothes.repository';
+import createLendReq from '../../type/lend/createLend.req';
 
-export const approveApply: RequestHandler = async (req, res, next) => {
+export const createLend: RequestHandler = async (req, res, next) => {
   try {
-    const applyId = Number(req.params.applyId);
-
+    const { clothes, price, start_date, end_date } = req.body;
     const user = req.user as LoginUser;
-    if (!user) {
-      throw new UnauthorizedError('로그인이 필요한 기능입니다');
+
+    const foundUser = await UserRepository.findOneByUsername(user.username);
+
+    if (!foundUser) {
+      throw new BadRequestError('User not found.');
     }
 
-    await ApplyService.approveApply(applyId, user.id);
+    const lender = (await ClothesRepository.findOneByClothesId(clothes)).owner;
 
-    const message: DefaultRes = { message: '대여신청이 수락되었습니다.' };
-    res.json(message);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const rejectApply: RequestHandler = async (req, res, next) => {
-  try {
-    const applyId = Number(req.params.applyId);
-
-    const user = req.user as LoginUser;
-    if (!user) {
-      throw new UnauthorizedError('로그인이 필요한 기능입니다');
+    if (!lender) {
+      throw new BadRequestError('Lender not found.');
     }
 
-    await ApplyService.rejectApply(applyId, user.id);
+    const lendInfo: createLendReq = {
+      clothes,
+      price,
+      startDate: new Date(start_date),
+      endDate: new Date(end_date),
+      loanee: foundUser,
+      lender,
+      review: '',
+    };
 
-    const message: DefaultRes = { message: '대여신청이 거절되었습니다.' };
+    await LendService.createLend(lendInfo);
+
+    const message: DefaultRes = {
+      message: 'Apply created successful',
+    };
+
     res.json(message);
   } catch (error) {
     next(error);
