@@ -87,3 +87,23 @@ export const modifyCloset: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const deleteCloset: RequestHandler = async (req, res, next) => {
+  try {
+    const closetId = Number(req.params.closetId);
+
+    if (!req.user) {
+      throw new UnauthorizedError('로그인이 필요한 기능입니다.');
+    }
+    const { id } = req.user as LoginUser;
+
+    await ClosetService.deleteCloset(closetId, id);
+
+    const message: DefaultRes = {
+      message: '옷장이 삭제되었습니다.',
+    };
+    res.json(message);
+  } catch (error) {
+    next(error);
+  }
+};
