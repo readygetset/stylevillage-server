@@ -10,7 +10,6 @@ import { BadRequestError, ForbiddenError } from '../util/customErrors';
 import UserRepository from '../repository/user.repository';
 import LendRepository from '../repository/lend.repository';
 import reviewRes from '../type/lend/review.res';
-import userRes from '../type/user/user.res';
 
 export default class ClothesService {
   static async createClothes(
@@ -66,11 +65,7 @@ export default class ClothesService {
 
     if (!(clothes.isOpen || (userId && userId === clothes.owner.id)))
       throw new ForbiddenError('공개되지 않은 옷입니다.');
-    const owner: userRes = {
-      id: clothes.owner.id,
-      username: clothes.owner.username,
-      nickname: clothes.owner.nickname,
-    };
+
     const review: reviewRes[] =
       await LendRepository.getReviewByClothesId(clothesId);
     const getClothesRes: GetClothesRes = {
@@ -83,7 +78,7 @@ export default class ClothesService {
       name: clothes.name,
       tag: clothes.tag,
       image: clothes.image,
-      owner: owner,
+      owner: clothes.owner,
       review: review,
     };
 
