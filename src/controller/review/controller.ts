@@ -16,7 +16,7 @@ export const modifyReview: RequestHandler = async (req, res, next) => {
 
     await LendService.modifyReview(review, lendId, user.id);
 
-    const message: DefaultRes = { message: '후기가 수정되었습니다.' };
+    const message: DefaultRes = { message: '리뷰가 작성되었습니다.' };
     res.json(message);
   } catch (error) {
     next(error);
