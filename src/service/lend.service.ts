@@ -3,7 +3,7 @@ import LendRepository from '../repository/lend.repository';
 import getLendsRes from '../type/lend/getLends.res';
 import createLendReq from '../type/lend/createLend.req';
 import Lend from '../entity/lend.entity';
-import { BadRequestError } from '../util/customErrors';
+import { BadRequestError, UnauthorizedError } from '../util/customErrors';
 
 export default class LendService {
   static async createLend(lendInfo: createLendReq): Promise<Lend> {
@@ -37,5 +37,20 @@ export default class LendService {
     }
 
     return await LendRepository.update({ id: lendId }, { review: '' });
+  }
+
+  static async modifyReview(
+    review: string,
+    lendId: number,
+    userId: number,
+  ): Promise<UpdateResult> {
+    const loanee = await LendRepository.findLoaneeById(lendId);
+
+    if (loanee.id != userId) {
+      throw new UnauthorizedError(
+        '본인이 빌렸던 대여내역에 대해서만 리뷰를 작성할 수 있습니다.',
+      );
+    }
+    return await LendRepository.update({ id: lendId }, { review });
   }
 }
