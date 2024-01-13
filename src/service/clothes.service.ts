@@ -8,6 +8,8 @@ import GetClothesReq from '../type/clothes/getClothes.req';
 import GetClothesRes from '../type/clothes/getClothes.res';
 import { BadRequestError, ForbiddenError } from '../util/customErrors';
 import UserRepository from '../repository/user.repository';
+import LendRepository from '../repository/lend.repository';
+import reviewRes from '../type/lend/review.res';
 import WishRepository from '../repository/wish.repository';
 
 export default class ClothesService {
@@ -63,36 +65,36 @@ export default class ClothesService {
     const { clothesId } = id;
     const clothes = await ClothesRepository.findOneByClothesId(clothesId);
 
-    if (clothes.isOpen || (userId && userId === clothes.owner.id)) {
-      let isWished = false;
+    if (!(clothes.isOpen || (userId && userId === clothes.owner.id)))
+      throw new ForbiddenError('공개되지 않은 옷입니다.');
 
-      if (userId) {
-        const wish = await WishRepository.findWishByData(
-          userId,
-          clothesId,
-          true,
-        );
-        if (wish) {
-          isWished = true;
-        }
+    const review: reviewRes[] =
+      await LendRepository.getReviewByClothesId(clothesId);
+
+    let isWished = false;
+
+    if (userId) {
+      const wish = await WishRepository.findWishByData(userId, clothesId, true);
+      if (wish) {
+        isWished = true;
       }
+    }
+    const getClothesRes: GetClothesRes = {
+      id: clothes.id,
+      closet: clothes.closet,
+      category: clothes.category,
+      season: clothes.season,
+      status: clothes.status,
+      isOpen: clothes.isOpen,
+      name: clothes.name,
+      tag: clothes.tag,
+      image: clothes.image,
+      owner: clothes.owner,
+      review: review,
+      isWished: isWished,
+    };
 
-      const getClothesRes: GetClothesRes = {
-        id: clothes.id,
-        closet: clothes.closet,
-        category: clothes.category,
-        season: clothes.season,
-        status: clothes.status,
-        isOpen: clothes.isOpen,
-        name: clothes.name,
-        tag: clothes.tag,
-        image: clothes.image,
-        owner: clothes.owner,
-        isWished: isWished,
-      };
-
-      return getClothesRes;
-    } else throw new ForbiddenError('공개되지 않은 옷입니다.');
+    return getClothesRes;
   }
 
   static async deleteClothes(
