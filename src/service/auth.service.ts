@@ -5,6 +5,7 @@ import RegisterReq from '../type/user/register.req';
 import { BadRequestError, DuplicateValueError } from '../util/customErrors';
 import LoginReq from '../type/user/login.req';
 import jwt from 'jsonwebtoken';
+import LoginRes from '../type/user/login.res';
 
 // 예시 service입니다. 필요에 따라 수정하거나 삭제하셔도 됩니다.
 
@@ -21,7 +22,7 @@ export default class AuthService {
     return await UserRepository.save(newUser);
   }
 
-  static async login(loginInfo: LoginReq): Promise<string> {
+  static async login(loginInfo: LoginReq): Promise<LoginRes> {
     const user = await UserRepository.findOneByUsername(loginInfo.username);
 
     const isSame = await bcrypt.compare(loginInfo.password, user.password);
@@ -35,6 +36,15 @@ export default class AuthService {
       { expiresIn: '3h' }, // 로그인 유지 3시간
     );
 
-    return accessToken;
+    const loginRes: LoginRes = {
+      accessToken,
+      username: user.username,
+      nickname: user.nickname ?? null,
+      gender: user.gender ?? null,
+      location: user.location ?? null,
+      isBannded: user.isBanned ?? null,
+    };
+
+    return loginRes;
   }
 }

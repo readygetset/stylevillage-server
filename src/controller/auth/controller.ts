@@ -4,7 +4,6 @@ import AuthService from '../../service/auth.service';
 import RegisterReq from '../../type/user/register.req';
 import RegisterRes from '../../type/user/register.res';
 import LoginReq from '../../type/user/login.req';
-import LoginRes from '../../type/user/login.res';
 
 export const register: RequestHandler = async (req, res, next) => {
   try {
@@ -48,9 +47,8 @@ export const login: RequestHandler = async (req, res, next) => {
     }
 
     const loginInfo: LoginReq = { username, password };
-    const accessToken = await AuthService.login(loginInfo);
+    const loginRes = await AuthService.login(loginInfo);
 
-    const loginRes: LoginRes = { accessToken };
     res.json(loginRes);
   } catch (error) {
     next(error);
