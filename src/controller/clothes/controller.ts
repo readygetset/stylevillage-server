@@ -149,3 +149,19 @@ export const deleteClothes: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getPopularClothes: RequestHandler = async (req, res, next) => {
+  try {
+    const count = Number(req.params.count);
+    const user = req.user as LoginUser;
+
+    const clothes = await ClothesService.getPopularClothes(
+      count,
+      user ? user.id : null,
+    );
+
+    res.json(clothes);
+  } catch (error) {
+    next(error);
+  }
+};

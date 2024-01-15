@@ -9,7 +9,7 @@ import Status from '../common/enum/status.enum';
 @Entity()
 export default class Clothes extends BaseTime {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id!: number;
 
   @ManyToOne(() => Closet, {
     cascade: ['insert', 'recover', 'update'],

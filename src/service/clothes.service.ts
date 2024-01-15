@@ -11,6 +11,7 @@ import UserRepository from '../repository/user.repository';
 import LendRepository from '../repository/lend.repository';
 import reviewRes from '../type/lend/review.res';
 import WishRepository from '../repository/wish.repository';
+import GetClothesListRes from '../type/clothes/getClothesList.res';
 
 export default class ClothesService {
   static async createClothes(
@@ -108,5 +109,37 @@ export default class ClothesService {
     }
 
     return await ClothesRepository.softDelete(clothesId);
+  }
+
+  static async getPopularClothes(
+    count: number,
+    userId: number | null,
+  ): Promise<GetClothesListRes[]> {
+    const clothesList = await ClothesRepository.findOrderByWishCount(count);
+    const clothesListWithIsWished: GetClothesListRes[] = await Promise.all(
+      clothesList.map(async (clothes) => {
+        const clothesWithIsWished: GetClothesListRes = {
+          id: clothes.id,
+          closetId: clothes.closet?.id ?? null,
+          category: clothes.category ?? null,
+          season: clothes.season ?? null,
+          status: clothes.status,
+          isOpen: clothes.isOpen,
+          name: clothes.name,
+          tag: clothes.tag ?? null,
+          isWished: false,
+        };
+        if (userId) {
+          const isWished = await WishRepository.findWishByData(
+            userId,
+            clothes.id,
+            true,
+          );
+          clothesWithIsWished.isWished = isWished ? true : false;
+        }
+        return clothesWithIsWished;
+      }),
+    );
+    return clothesListWithIsWished;
   }
 }
