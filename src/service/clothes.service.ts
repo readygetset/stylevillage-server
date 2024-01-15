@@ -91,7 +91,11 @@ export default class ClothesService {
       name: clothes.name,
       tag: clothes.tag,
       image: clothes.image,
-      owner: clothes.owner,
+      owner: {
+        id: clothes.owner.id,
+        nickname: clothes.owner.nickname,
+        location: clothes.owner.location,
+      },
       review: review,
       isWished: isWished,
     };

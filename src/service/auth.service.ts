@@ -38,6 +38,7 @@ export default class AuthService {
 
     const loginRes: LoginRes = {
       accessToken,
+      id: user.id,
       username: user.username,
       nickname: user.nickname ?? null,
       gender: user.gender ?? null,

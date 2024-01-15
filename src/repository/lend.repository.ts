@@ -48,6 +48,7 @@ const LendRepository = AppDataSource.getRepository(Lend).extend({
   async findByClothesId(clothesId: number): Promise<Lend[]> {
     return this.find({
       where: { clothes: { id: clothesId } },
+      relations: { loanee: true },
     });
   },
 
@@ -56,11 +57,16 @@ const LendRepository = AppDataSource.getRepository(Lend).extend({
     const reviewsPromises = lends.map(async (lend: Lend) => {
       if (!lend || !lend.review || !lend.id) return undefined;
       else {
-        const review: ReviewRes = {
+        console.log(lend);
+        const reviewObject: ReviewRes = {
           review: lend.review,
-          reviewer: lend.loanee,
+          reviewer: {
+            id: lend.loanee.id,
+            username: lend.loanee.username,
+            nickname: lend.loanee.nickname,
+          },
         };
-        return review;
+        return reviewObject;
       }
     });
     const reviews = await Promise.all(reviewsPromises);
