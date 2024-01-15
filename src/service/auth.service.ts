@@ -6,6 +6,7 @@ import { BadRequestError, DuplicateValueError } from '../util/customErrors';
 import LoginReq from '../type/user/login.req';
 import jwt from 'jsonwebtoken';
 import LoginRes from '../type/user/login.res';
+import { JwtPayload } from 'jsonwebtoken';
 
 // 예시 service입니다. 필요에 따라 수정하거나 삭제하셔도 됩니다.
 
@@ -46,5 +47,18 @@ export default class AuthService {
     };
 
     return loginRes;
+  }
+
+  static async getUserFromToken(token: string): Promise<User> {
+    try {
+      const decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET_KEY as string,
+      ) as JwtPayload;
+      const username = decoded.username;
+      return await UserRepository.findOneByUsername(username);
+    } catch (error) {
+      throw new BadRequestError('유효하지 않은 토큰입니다.');
+    }
   }
 }
