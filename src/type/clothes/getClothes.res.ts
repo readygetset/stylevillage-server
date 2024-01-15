@@ -8,6 +8,7 @@ import ReviewRes from '../lend/review.res';
 export default interface GetClothesRes {
   id?: number;
   closet?: Closet;
+  description?: string;
   category?: Category;
   season?: Season;
   status: Status;

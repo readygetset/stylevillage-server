@@ -1,5 +1,6 @@
 export default interface Clothes {
   id?: number;
+  description?: string;
   category?: string;
   season?: string;
   status?: string;
