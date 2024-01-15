@@ -72,14 +72,7 @@ export default class ClothesService {
     const review: reviewRes[] =
       await LendRepository.getReviewByClothesId(clothesId);
 
-    let isWished = false;
-
-    if (userId) {
-      const wish = await WishRepository.findWishByData(userId, clothesId, true);
-      if (wish) {
-        isWished = true;
-      }
-    }
+    const wishCount = await WishRepository.findAndCountByclothesId(clothesId);
     const getClothesRes: GetClothesRes = {
       id: clothes.id,
       closet: clothes.closet,
@@ -91,9 +84,17 @@ export default class ClothesService {
       tag: clothes.tag,
       image: clothes.image,
       owner: clothes.owner,
-      review: review,
-      isWished: isWished,
+      review,
+      isWished: false,
+      wishCount,
     };
+
+    if (userId) {
+      const wish = await WishRepository.findWishByData(userId, clothesId, true);
+      if (wish) {
+        getClothesRes.isWished = true;
+      }
+    }
 
     return getClothesRes;
   }
