@@ -12,6 +12,16 @@ const ApplyRepository = AppDataSource.getRepository(Apply).extend({
       return apply;
     });
   },
+  async findArrivedApplyByUserId(userId: number): Promise<Apply[]> {
+    return this.find({
+      where: {
+        clothes: { owner: { id: userId } },
+        isAccepted: false,
+        isRejected: false,
+      },
+      relations: { clothes: { owner: true }, user: true },
+    });
+  },
 });
 
 export default ApplyRepository;
