@@ -24,6 +24,7 @@ export default class ClothesService {
 
     const clothes: Clothes = {
       closet: clothesInfo.closet,
+      description: clothesInfo.description,
       category: clothesInfo.category,
       season: clothesInfo.season,
       status: clothesInfo.status,
@@ -81,6 +82,7 @@ export default class ClothesService {
 
     const getClothesRes: GetClothesRes = {
       id: clothes.id,
+      description: clothes.description,
       closet: clothes.closet,
       category: clothes.category,
       season: clothes.season,

@@ -23,6 +23,19 @@ const WishRepository = AppDataSource.getRepository(Wish).extend({
     }).then((wishes) => wishes.length);
   },
 
+  async findWishByUserIdClothesId(
+    userId: number,
+    clothesId: number,
+  ): Promise<Wish | null> {
+    return this.findOne({
+      where: {
+        user: { id: userId },
+        clothes: { id: clothesId },
+      },
+      relations: ['clothes', 'user'],
+    });
+  },
+
   async findWishesByUser(userId: number): Promise<Wish[]> {
     return this.find({
       where: {
