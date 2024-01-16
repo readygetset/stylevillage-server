@@ -56,6 +56,7 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
       season: season ? In(season) : undefined,
       category: category ? In(category) : undefined,
       status: status ? In(status) : undefined,
+      isOpen: true,
     };
 
     const clothesList = this.find({

@@ -172,10 +172,12 @@ export const searchClothes: RequestHandler = async (req, res, next) => {
   try {
     const user = req.user as LoginUser;
 
-    if (typeof req.query.text != 'string') {
+    const untestedText = req.query.text;
+    if (untestedText && typeof untestedText != 'string') {
       throw new BadRequestError('text 항목이 string 타입이 아닙니다.');
     }
-    const text = req.query.text.trim() as string;
+    const text =
+      typeof untestedText == 'string' ? untestedText.trim() : untestedText;
     const category = queryValueToArray(req.query.category as string | string[]);
     const status = queryValueToArray(req.query.status as string | string[]);
     const season = queryValueToArray(req.query.season as string | string[]);
