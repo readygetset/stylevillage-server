@@ -22,6 +22,14 @@ export default class Clothes extends BaseTime {
   owner!: User;
 
   @Column({
+    type: 'varchar',
+    length: 1000,
+    nullable: true,
+    comment: '설명',
+  })
+  description?: string;
+
+  @Column({
     type: 'enum',
     enum: Category,
     nullable: true,

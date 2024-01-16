@@ -5,6 +5,7 @@ import Status from '../../common/enum/status.enum';
 
 export default interface CreateClothesReq {
   closet?: Closet;
+  description?: string;
   category?: Category;
   season?: Season;
   status: Status;

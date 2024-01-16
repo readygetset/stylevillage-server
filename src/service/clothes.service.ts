@@ -22,6 +22,7 @@ export default class ClothesService {
 
     const clothes: Clothes = {
       closet: clothesInfo.closet,
+      description: clothesInfo.description,
       category: clothesInfo.category,
       season: clothesInfo.season,
       status: clothesInfo.status,
@@ -74,13 +75,17 @@ export default class ClothesService {
     let isWished = false;
 
     if (userId) {
-      const wish = await WishRepository.findWishByData(userId, clothesId, true);
-      if (wish) {
+      const wish = await WishRepository.findWishByUserIdClothesId(
+        userId,
+        clothesId,
+      );
+      if (wish?.isWished == true) {
         isWished = true;
       }
     }
     const getClothesRes: GetClothesRes = {
       id: clothes.id,
+      description: clothes.description,
       closet: clothes.closet,
       category: clothes.category,
       season: clothes.season,
@@ -89,7 +94,11 @@ export default class ClothesService {
       name: clothes.name,
       tag: clothes.tag,
       image: clothes.image,
-      owner: clothes.owner,
+      owner: {
+        id: clothes.owner.id,
+        nickname: clothes.owner.nickname,
+        location: clothes.owner.location,
+      },
       review: review,
       isWished: isWished,
     };

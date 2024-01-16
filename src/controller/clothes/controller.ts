@@ -14,8 +14,17 @@ import DefaultRes from '../../type/default.res';
 
 export const createClothes: RequestHandler = async (req, res, next) => {
   try {
-    const { closet, category, season, status, isOpen, name, tag, image } =
-      req.body;
+    const {
+      closet,
+      description,
+      category,
+      season,
+      status,
+      isOpen,
+      name,
+      tag,
+      image,
+    } = req.body;
     const user = req.user as LoginUser;
 
     if (!user) {
@@ -38,6 +47,7 @@ export const createClothes: RequestHandler = async (req, res, next) => {
 
     const clothesInfo: CreateClothesReq = {
       closet,
+      description,
       category,
       season,
       status,
@@ -80,8 +90,17 @@ export const getClothes: RequestHandler = async (req, res, next) => {
 export const modifyClothes: RequestHandler = async (req, res, next) => {
   try {
     const id = Number(req.params.clothesId);
-    const { closet, category, season, status, isOpen, name, tag, image } =
-      req.body;
+    const {
+      closet,
+      description,
+      category,
+      season,
+      status,
+      isOpen,
+      name,
+      tag,
+      image,
+    } = req.body;
     const user = req.user as LoginUser;
 
     if (!user) {
@@ -115,6 +134,7 @@ export const modifyClothes: RequestHandler = async (req, res, next) => {
     const modifyClothesReq: ModifyClothesReq = {
       closet,
       category,
+      description,
       season,
       status,
       isOpen,

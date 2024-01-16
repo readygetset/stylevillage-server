@@ -6,6 +6,7 @@ import Status from '../../common/enum/status.enum';
 
 export default interface GetClothesRes {
   id?: number;
+  description?: string;
   closet?: Closet;
   category?: Category;
   season?: Season;
