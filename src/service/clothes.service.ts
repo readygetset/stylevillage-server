@@ -11,6 +11,8 @@ import UserRepository from '../repository/user.repository';
 import LendRepository from '../repository/lend.repository';
 import reviewRes from '../type/lend/review.res';
 import WishRepository from '../repository/wish.repository';
+import GetClothesListRes from '../type/clothes/getClothesList.res';
+import UserRes from '../type/user/user.res';
 
 export default class ClothesService {
   static async createClothes(
@@ -71,18 +73,13 @@ export default class ClothesService {
 
     const review: reviewRes[] =
       await LendRepository.getReviewByClothesId(clothesId);
+    const owner: UserRes = {
+      id: clothes.owner.id,
+      username: clothes.owner.username,
+      nickname: clothes.owner.nickname,
+    };
+    const wishCount = await WishRepository.findAndCountByclothesId(clothesId);
 
-    let isWished = false;
-
-    if (userId) {
-      const wish = await WishRepository.findWishByUserIdClothesId(
-        userId,
-        clothesId,
-      );
-      if (wish?.isWished == true) {
-        isWished = true;
-      }
-    }
     const getClothesRes: GetClothesRes = {
       id: clothes.id,
       description: clothes.description,
@@ -94,14 +91,18 @@ export default class ClothesService {
       name: clothes.name,
       tag: clothes.tag,
       image: clothes.image,
-      owner: {
-        id: clothes.owner.id,
-        nickname: clothes.owner.nickname,
-        location: clothes.owner.location,
-      },
-      review: review,
-      isWished: isWished,
+      owner: owner,
+      review,
+      isWished: false,
+      wishCount,
     };
+
+    if (userId) {
+      const wish = await WishRepository.findWishByData(userId, clothesId, true);
+      if (wish) {
+        getClothesRes.isWished = true;
+      }
+    }
 
     return getClothesRes;
   }
@@ -117,5 +118,37 @@ export default class ClothesService {
     }
 
     return await ClothesRepository.softDelete(clothesId);
+  }
+
+  static async getPopularClothes(
+    count: number,
+    userId: number | null,
+  ): Promise<GetClothesListRes[]> {
+    const clothesList = await ClothesRepository.findOrderByWishCount(count);
+    const clothesListWithIsWished: GetClothesListRes[] = await Promise.all(
+      clothesList.map(async (clothes) => {
+        const clothesWithIsWished: GetClothesListRes = {
+          id: clothes.id,
+          closetId: clothes.closet?.id ?? null,
+          category: clothes.category ?? null,
+          season: clothes.season ?? null,
+          status: clothes.status,
+          isOpen: clothes.isOpen,
+          name: clothes.name,
+          tag: clothes.tag ?? null,
+          isWished: false,
+        };
+        if (userId) {
+          const isWished = await WishRepository.findWishByData(
+            userId,
+            clothes.id,
+            true,
+          );
+          clothesWithIsWished.isWished = isWished ? true : false;
+        }
+        return clothesWithIsWished;
+      }),
+    );
+    return clothesListWithIsWished;
   }
 }

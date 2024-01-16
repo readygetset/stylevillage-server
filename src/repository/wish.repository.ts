@@ -17,6 +17,12 @@ const WishRepository = AppDataSource.getRepository(Wish).extend({
     });
   },
 
+  async findAndCountByclothesId(clothesId: number): Promise<number> {
+    return this.find({
+      where: { clothes: { id: clothesId }, isWished: true },
+    }).then((wishes) => wishes.length);
+  },
+
   async findWishByUserIdClothesId(
     userId: number,
     clothesId: number,

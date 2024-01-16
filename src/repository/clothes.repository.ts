@@ -1,6 +1,7 @@
 import AppDataSource from '../config/dataSource';
 import Clothes from '../entity/clothes.entity';
 import { BadRequestError } from '../util/customErrors';
+import WishRepository from './wish.repository';
 
 const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
   async findOneByClothesId(id: number): Promise<Clothes> {
@@ -29,6 +30,21 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
         { closet: { id: closetId }, owner: { id: userId } },
       ],
     });
+  },
+
+  async findOrderByWishCount(clothesCount: number): Promise<Clothes[]> {
+    const clothesList = await Promise.all(
+      (
+        await this.find({
+          where: { isOpen: true },
+        })
+      ).map(async (clothes) => {
+        const count = await WishRepository.findAndCountByclothesId(clothes.id);
+        return { ...clothes, count };
+      }),
+    );
+
+    return clothesList.sort((a, b) => b.count - a.count).slice(0, clothesCount);
   },
 });
 

@@ -23,4 +23,5 @@ export default interface GetClothesRes {
   owner: Owner;
   review: ReviewRes[];
   isWished: boolean;
+  wishCount: number;
 }
