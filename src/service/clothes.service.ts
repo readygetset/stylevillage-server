@@ -12,6 +12,7 @@ import LendRepository from '../repository/lend.repository';
 import reviewRes from '../type/lend/review.res';
 import WishRepository from '../repository/wish.repository';
 import GetClothesListRes from '../type/clothes/getClothesList.res';
+import UserRes from '../type/user/user.res';
 
 export default class ClothesService {
   static async createClothes(
@@ -71,8 +72,13 @@ export default class ClothesService {
 
     const review: reviewRes[] =
       await LendRepository.getReviewByClothesId(clothesId);
-
+    const owner: UserRes = {
+      id: clothes.owner.id,
+      username: clothes.owner.username,
+      nickname: clothes.owner.nickname,
+    };
     const wishCount = await WishRepository.findAndCountByclothesId(clothesId);
+
     const getClothesRes: GetClothesRes = {
       id: clothes.id,
       closet: clothes.closet,
@@ -83,7 +89,7 @@ export default class ClothesService {
       name: clothes.name,
       tag: clothes.tag,
       image: clothes.image,
-      owner: clothes.owner,
+      owner: owner,
       review,
       isWished: false,
       wishCount,
