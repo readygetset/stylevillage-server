@@ -75,8 +75,11 @@ export default class ClothesService {
     let isWished = false;
 
     if (userId) {
-      const wish = await WishRepository.findWishByData(userId, clothesId, true);
-      if (wish) {
+      const wish = await WishRepository.findWishByUserIdClothesId(
+        userId,
+        clothesId,
+      );
+      if (wish?.isWished == true) {
         isWished = true;
       }
     }

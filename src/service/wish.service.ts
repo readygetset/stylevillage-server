@@ -12,12 +12,10 @@ export default class WishService {
     wishInfo: CreateWishReq,
     userId: number,
   ): Promise<UpdateResult | Wish> {
-    const wish = await WishRepository.findWishByData(
+    const wish = await WishRepository.findWishByUserIdClothesId(
       userId,
       wishInfo.clothesId,
-      false,
     );
-
     if (!wish) {
       const clothes = await ClothesRepository.findOneByClothesId(
         wishInfo.clothesId,
@@ -28,8 +26,9 @@ export default class WishService {
         clothes: clothes,
         isWished: true,
       });
-
       return await WishRepository.save(newWish);
+    } else if (wish?.isWished == true) {
+      throw new BadRequestError('이미 찜한 옷입니다.');
     } else {
       return await WishRepository.update({ id: wish.id }, { isWished: true });
     }
@@ -39,14 +38,16 @@ export default class WishService {
     wishInfo: CreateWishReq,
     userId: number,
   ): Promise<UpdateResult> {
-    const wish = await WishRepository.findWishByData(
+    const wish = await WishRepository.findWishByUserIdClothesId(
       userId,
       wishInfo.clothesId,
-      true,
     );
 
     if (!wish)
       throw new BadRequestError('해당 옷에 대한 찜 정보를 찾을 수 없습니다.');
+    else if (wish?.isWished == false) {
+      throw new BadRequestError('찜 목록에 없는 옷입니다');
+    }
     return await WishRepository.update({ id: wish.id }, { isWished: false });
   }
 

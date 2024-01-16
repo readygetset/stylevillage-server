@@ -57,7 +57,6 @@ const LendRepository = AppDataSource.getRepository(Lend).extend({
     const reviewsPromises = lends.map(async (lend: Lend) => {
       if (!lend || !lend.review || !lend.id) return undefined;
       else {
-        console.log(lend);
         const reviewObject: ReviewRes = {
           review: lend.review,
           reviewer: {
