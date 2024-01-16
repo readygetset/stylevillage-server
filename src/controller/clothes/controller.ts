@@ -176,8 +176,7 @@ export const searchClothes: RequestHandler = async (req, res, next) => {
     if (untestedText && typeof untestedText != 'string') {
       throw new BadRequestError('text 항목이 string 타입이 아닙니다.');
     }
-    const text =
-      typeof untestedText == 'string' ? untestedText.trim() : untestedText;
+    const text = untestedText as string;
     const category = queryValueToArray(req.query.category as string | string[]);
     const status = queryValueToArray(req.query.status as string | string[]);
     const season = queryValueToArray(req.query.season as string | string[]);
@@ -193,7 +192,7 @@ export const searchClothes: RequestHandler = async (req, res, next) => {
     }
 
     const searchClothesReq: SearchClothesReq = {
-      text,
+      text: text.trim(),
       category,
       status,
       season,
