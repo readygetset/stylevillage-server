@@ -13,6 +13,8 @@ import reviewRes from '../type/lend/review.res';
 import WishRepository from '../repository/wish.repository';
 import GetClothesListRes from '../type/clothes/getClothesList.res';
 import UserRes from '../type/user/user.res';
+import SearchClothesRes from '../type/clothes/searchClothes.res';
+import SearchClothesReq from '../type/clothes/searchClothes.req';
 
 export default class ClothesService {
   static async createClothes(
@@ -148,5 +150,48 @@ export default class ClothesService {
       }),
     );
     return clothesListWithIsWished;
+  }
+
+  static async searchClothes(
+    userId: number | undefined,
+    searchClothesReq: SearchClothesReq,
+  ): Promise<SearchClothesRes[]> {
+    const clothes = await ClothesRepository.findByOptions(searchClothesReq);
+
+    const clothesList = Promise.all(
+      clothes.map(async (clothes) => {
+        const owner: UserRes = {
+          id: clothes.owner.id,
+          username: clothes.owner.username,
+          nickname: clothes.owner.nickname,
+        };
+
+        const searchClothesRes: SearchClothesRes = {
+          id: clothes.id,
+          closetId: clothes.closet?.id,
+          category: clothes.category,
+          season: clothes.season,
+          status: clothes.status,
+          isOpen: clothes.isOpen,
+          name: clothes.name,
+          tag: clothes.tag,
+          image: clothes.image,
+          owner: owner,
+          isWished: false,
+        };
+
+        if (userId) {
+          const isWished = await WishRepository.findWishByData(
+            userId,
+            clothes.id,
+            true,
+          );
+          searchClothesRes.isWished = isWished ? true : false;
+        }
+
+        return searchClothesRes;
+      }),
+    );
+    return clothesList;
   }
 }
