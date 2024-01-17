@@ -6,12 +6,13 @@ const ApplyRepository = AppDataSource.getRepository(Apply).extend({
   async findOneByApplyId(id: number): Promise<Apply> {
     return this.findOne({
       where: { id },
-      relations: { clothes: { closet: { owner: true } } },
+      relations: { clothes: { owner: true } },
     }).then((apply) => {
       if (!apply) throw new BadRequestError('존재하지 않는 신청입니다.');
       return apply;
     });
   },
+
   async findArrivedApplyByUserId(userId: number): Promise<Apply[]> {
     return this.find({
       where: {
