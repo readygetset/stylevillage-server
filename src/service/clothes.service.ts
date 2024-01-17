@@ -177,6 +177,7 @@ export default class ClothesService {
     userId: number,
     loginUserId: number | null,
   ): Promise<GetClothesListRes[]> {
+    await UserRepository.findOneByUserId(userId);
     const clothesList = await ClothesRepository.findByUserId(
       userId,
       loginUserId == userId ? undefined : true,

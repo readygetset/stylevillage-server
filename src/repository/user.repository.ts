@@ -25,7 +25,7 @@ const UserRepository = AppDataSource.getRepository(User).extend({
   async findOneByUserId(id: number): Promise<User> {
     return this.findOne({ where: { id } }).then((user) => {
       if (!user)
-        throw new BadRequestError('유저 정보를 불러오는 데 실패하였습니다.');
+        throw new BadRequestError('일치하는 사용자가 존재하지 않습니다.');
       return user;
     });
   },
