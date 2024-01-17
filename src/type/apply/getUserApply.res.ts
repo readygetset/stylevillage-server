@@ -1,6 +1,7 @@
 interface clothes {
   id?: number;
   name?: string;
+  image?: string;
 }
 interface user {
   id?: number;

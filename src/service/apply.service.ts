@@ -48,6 +48,7 @@ export default class ApplyService {
         clothes: {
           id: apply.clothes.id,
           name: apply.clothes.name,
+          image: apply.clothes.image,
         },
         user: {
           id: apply.user.id,
