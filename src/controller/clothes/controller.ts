@@ -220,11 +220,27 @@ export const searchClothes: RequestHandler = async (req, res, next) => {
     };
 
     const clothes = await ClothesService.searchClothes(
-      user ? user.id : undefined,
+      user ? user.id : null,
       searchClothesReq,
     );
 
     res.json(clothes);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getClothesList: RequestHandler = async (req, res, next) => {
+  try {
+    const userId = Number(req.params.userId);
+    const user = req.user as LoginUser;
+
+    const clothesList = await ClothesService.getClothesList(
+      userId,
+      user ? user.id : null,
+    );
+
+    res.json(clothesList);
   } catch (error) {
     next(error);
   }

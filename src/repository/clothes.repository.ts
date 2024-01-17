@@ -34,6 +34,15 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
     });
   },
 
+  async findByUserId(
+    userId: number,
+    isOpen: boolean | undefined,
+  ): Promise<Clothes[]> {
+    return this.find({
+      where: { owner: { id: userId }, isOpen },
+    });
+  },
+
   async findOrderByWishCount(clothesCount: number): Promise<Clothes[]> {
     const clothesList = await Promise.all(
       (
