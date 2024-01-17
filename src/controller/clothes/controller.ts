@@ -11,6 +11,8 @@ import Status from '../../common/enum/status.enum';
 import ModifyClothesReq from '../../type/clothes/modifyClothes.req';
 import isInEnum from '../../util/isInEnum';
 import DefaultRes from '../../type/default.res';
+import SearchClothesReq from '../../type/clothes/searchClothes.req';
+import queryValueToArray from '../../util/queryValueToArray';
 
 export const createClothes: RequestHandler = async (req, res, next) => {
   try {
@@ -178,6 +180,48 @@ export const getPopularClothes: RequestHandler = async (req, res, next) => {
     const clothes = await ClothesService.getPopularClothes(
       count,
       user ? user.id : null,
+    );
+
+    res.json(clothes);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const searchClothes: RequestHandler = async (req, res, next) => {
+  try {
+    const user = req.user as LoginUser;
+
+    const untestedText = req.query.text;
+    if (untestedText && typeof untestedText != 'string') {
+      throw new BadRequestError('text 항목이 string 타입이 아닙니다.');
+    }
+    const text =
+      typeof untestedText == 'string' ? untestedText.trim() : undefined;
+    const category = queryValueToArray(req.query.category as string | string[]);
+    const status = queryValueToArray(req.query.status as string | string[]);
+    const season = queryValueToArray(req.query.season as string | string[]);
+
+    if (category?.some((element) => !isInEnum(element, Category))) {
+      throw new BadRequestError('category 항목이 유효하지 않습니다.');
+    }
+    if (status?.some((element) => !isInEnum(element, Status))) {
+      throw new BadRequestError('status 항목이 유효하지 않습니다.');
+    }
+    if (season?.some((element) => !isInEnum(element, Season))) {
+      throw new BadRequestError('season 항목이 유효하지 않습니다.');
+    }
+
+    const searchClothesReq: SearchClothesReq = {
+      text,
+      category,
+      status,
+      season,
+    };
+
+    const clothes = await ClothesService.searchClothes(
+      user ? user.id : undefined,
+      searchClothesReq,
     );
 
     res.json(clothes);

@@ -1,5 +1,7 @@
+import { In, Like } from 'typeorm';
 import AppDataSource from '../config/dataSource';
 import Clothes from '../entity/clothes.entity';
+import SearchClothesReq from '../type/clothes/searchClothes.req';
 import { BadRequestError } from '../util/customErrors';
 import WishRepository from './wish.repository';
 
@@ -45,6 +47,26 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
     );
 
     return clothesList.sort((a, b) => b.count - a.count).slice(0, clothesCount);
+  },
+
+  async findByOptions(options: SearchClothesReq): Promise<Clothes[]> {
+    const { text, season, category, status } = options;
+
+    const commonOptions = {
+      season: season ? In(season) : undefined,
+      category: category ? In(category) : undefined,
+      status: status ? In(status) : undefined,
+      isOpen: true,
+    };
+
+    const clothesList = this.find({
+      where: [
+        { name: text ? Like(`%${text}%`) : undefined, ...commonOptions },
+        { tag: text ? Like(`%${text}%`) : undefined, ...commonOptions },
+      ],
+      relations: { closet: true, owner: true },
+    });
+    return clothesList;
   },
 });
 
