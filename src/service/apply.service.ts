@@ -3,6 +3,7 @@ import ApplyRepository from '../repository/apply.repository';
 import { UnauthorizedError } from '../util/customErrors';
 import createApplyReq from '../type/apply/createApply.req';
 import Apply from '../entity/apply.entity';
+import getUserApplyRes from '../type/apply/getUserApply.res';
 
 export default class ApplyService {
   static async createApply(applyInfo: createApplyReq): Promise<Apply> {
@@ -37,5 +38,26 @@ export default class ApplyService {
     }
 
     return await ApplyRepository.update({ id: apply.id }, { isRejected: true });
+  }
+  static async findArrivedApply(userId: number): Promise<getUserApplyRes[]> {
+    const applies: Apply[] =
+      await ApplyRepository.findArrivedApplyByUserId(userId);
+    const applyInfos: Array<getUserApplyRes> = applies.map((apply) => {
+      const eachApply: getUserApplyRes = {
+        id: apply.id,
+        clothes: {
+          id: apply.clothes.id,
+          name: apply.clothes.name,
+          image: apply.clothes.image,
+        },
+        user: {
+          id: apply.user.id,
+          nickname: apply.user.nickname,
+        },
+        detail: apply.detail,
+      };
+      return eachApply;
+    });
+    return applyInfos;
   }
 }
