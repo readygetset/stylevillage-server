@@ -7,6 +7,8 @@ import LoginUser from '../../type/user/loginUser';
 import { BadRequestError, UnauthorizedError } from '../../util/customErrors';
 import getClosetListRes from '../../type/closet/getClosetList.res';
 import DefaultRes from '../../type/default.res';
+import AuthService from '../../service/auth.service';
+import ClosetRepository from '../../repository/closet.repository';
 
 export const postCloset: RequestHandler = async (req, res, next) => {
   try {
@@ -50,6 +52,16 @@ export const getCloset: RequestHandler = async (req, res, next) => {
   try {
     const closetId = Number(req.params.closetId);
     const user = req.user as LoginUser;
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) {
+      throw new BadRequestError('유효하지 않은 토큰입니다.');
+    }
+    const userbytoken = await AuthService.getUserFromToken(token);
+    if (
+      userbytoken.id !== (await ClosetRepository.getUserIdbyClosetId(closetId))
+    ) {
+      throw new BadRequestError('접근 권한이 없습니다.');
+    }
 
     const closetInfo: getClosetRes = await ClosetService.getCloset(
       closetId,

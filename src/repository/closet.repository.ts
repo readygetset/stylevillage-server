@@ -20,6 +20,14 @@ const ClosetRepository = AppDataSource.getRepository(Closet).extend({
     const closet = await this.findOneByClosetId(id);
     return closet.owner.id;
   },
+
+  async getUserIdbyClosetId(closetId: number): Promise<number | undefined> {
+    const closet = await this.findOneByClosetId(closetId);
+    if (!closet) {
+      throw new BadRequestError('옷장이 존재하지 않습니다.');
+    }
+    return closet.owner.id;
+  },
 });
 
 export default ClosetRepository;
