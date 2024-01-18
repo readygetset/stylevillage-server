@@ -23,6 +23,15 @@ const ApplyRepository = AppDataSource.getRepository(Apply).extend({
       relations: { clothes: { owner: true }, user: true },
     });
   },
+
+  async findSendedApplyByUserId(userId: number): Promise<Apply[]> {
+    return this.find({
+      where: {
+        user: { id: userId },
+      },
+      relations: { clothes: { owner: true }, user: true },
+    });
+  },
 });
 
 export default ApplyRepository;
