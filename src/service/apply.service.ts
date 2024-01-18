@@ -60,4 +60,26 @@ export default class ApplyService {
     });
     return applyInfos;
   }
+
+  static async findSendedApply(userId: number): Promise<getUserApplyRes[]> {
+    const applies: Apply[] =
+      await ApplyRepository.findSendedApplyByUserId(userId);
+    const applyInfos: Array<getUserApplyRes> = applies.map((apply) => {
+      const eachApply: getUserApplyRes = {
+        id: apply.id,
+        clothes: {
+          id: apply.clothes.id,
+          name: apply.clothes.name,
+          image: apply.clothes.image,
+        },
+        user: {
+          id: apply.user.id,
+          nickname: apply.user.nickname,
+        },
+        detail: apply.detail,
+      };
+      return eachApply;
+    });
+    return applyInfos;
+  }
 }

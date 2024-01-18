@@ -86,3 +86,17 @@ export const getArrivedApply: RequestHandler = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getSendedApply: RequestHandler = async (req, res, next) => {
+  try {
+    const user = req.user as LoginUser;
+    if (!user) {
+      throw new UnauthorizedError('로그인이 필요한 기능입니다');
+    }
+    const userId = Number(user.id);
+    const response = await ApplyService.findSendedApply(userId);
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
