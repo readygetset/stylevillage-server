@@ -4,6 +4,7 @@ import { UnauthorizedError } from '../util/customErrors';
 import createApplyReq from '../type/apply/createApply.req';
 import Apply from '../entity/apply.entity';
 import getUserApplyRes from '../type/apply/getUserApply.res';
+import getSendedApply from '../type/apply/getSendedApply.res copy';
 
 export default class ApplyService {
   static async createApply(applyInfo: createApplyReq): Promise<Apply> {
@@ -61,21 +62,24 @@ export default class ApplyService {
     return applyInfos;
   }
 
-  static async findSendedApply(userId: number): Promise<getUserApplyRes[]> {
+  static async findSendedApply(userId: number): Promise<getSendedApply[]> {
     const applies: Apply[] =
       await ApplyRepository.findSendedApplyByUserId(userId);
-    const applyInfos: Array<getUserApplyRes> = applies.map((apply) => {
-      const eachApply: getUserApplyRes = {
+    const applyInfos: Array<getSendedApply> = applies.map((apply) => {
+      const eachApply: getSendedApply = {
         id: apply.id,
         clothes: {
           id: apply.clothes.id,
           name: apply.clothes.name,
           image: apply.clothes.image,
         },
-        user: {
-          id: apply.user.id,
-          nickname: apply.user.nickname,
+        owner: {
+          id: apply.clothes.owner.id,
+          username: apply.clothes.owner.username,
+          nickname: apply.clothes.owner.nickname,
         },
+        isAccepted: apply.isAccepted,
+        isRejected: apply.isRejected,
         detail: apply.detail,
       };
       return eachApply;
