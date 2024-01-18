@@ -12,4 +12,5 @@ export default interface GetClothesListRes {
   name: string;
   tag?: string;
   isWished: boolean;
+  image?: string;
 }

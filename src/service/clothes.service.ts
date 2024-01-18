@@ -186,6 +186,7 @@ export default class ClothesService {
     const myClothesRes = Promise.all(
       clothesList.map(async (clothes) => {
         const clothesRes: GetClothesListRes = {
+          image: clothes.image,
           id: clothes.id,
           closetId: clothes.closet?.id,
           category: clothes.category,
