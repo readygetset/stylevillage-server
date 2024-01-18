@@ -95,16 +95,9 @@ export default class ClothesService {
       image: clothes.image,
       owner: owner,
       review,
-      isWished: false,
+      isWished: await this.getIsWished(userId, clothes.id),
       wishCount,
     };
-
-    if (userId) {
-      const wish = await WishRepository.findWishByData(userId, clothesId, true);
-      if (wish) {
-        getClothesRes.isWished = true;
-      }
-    }
 
     return getClothesRes;
   }
@@ -131,23 +124,15 @@ export default class ClothesService {
       clothesList.map(async (clothes) => {
         const clothesWithIsWished: GetClothesListRes = {
           id: clothes.id,
-          closetId: clothes.closet?.id ?? null,
-          category: clothes.category ?? null,
-          season: clothes.season ?? null,
+          closetId: clothes.closet?.id,
+          category: clothes.category,
+          season: clothes.season,
           status: clothes.status,
           isOpen: clothes.isOpen,
           name: clothes.name,
-          tag: clothes.tag ?? null,
-          isWished: false,
+          tag: clothes.tag,
+          isWished: await this.getIsWished(userId, clothes.id),
         };
-        if (userId) {
-          const isWished = await WishRepository.findWishByData(
-            userId,
-            clothes.id,
-            true,
-          );
-          clothesWithIsWished.isWished = isWished ? true : false;
-        }
         return clothesWithIsWished;
       }),
     );
@@ -155,7 +140,7 @@ export default class ClothesService {
   }
 
   static async searchClothes(
-    userId: number | undefined,
+    userId: number | null,
     searchClothesReq: SearchClothesReq,
   ): Promise<SearchClothesRes[]> {
     const clothes = await ClothesRepository.findByOptions(searchClothesReq);
@@ -179,21 +164,56 @@ export default class ClothesService {
           tag: clothes.tag,
           image: clothes.image,
           owner: owner,
-          isWished: false,
+          isWished: await this.getIsWished(userId, clothes.id),
         };
-
-        if (userId) {
-          const isWished = await WishRepository.findWishByData(
-            userId,
-            clothes.id,
-            true,
-          );
-          searchClothesRes.isWished = isWished ? true : false;
-        }
 
         return searchClothesRes;
       }),
     );
     return clothesList;
+  }
+
+  static async getClothesList(
+    userId: number,
+    loginUserId: number | null,
+  ): Promise<GetClothesListRes[]> {
+    await UserRepository.findOneByUserId(userId);
+    const clothesList = await ClothesRepository.findByUserId(
+      userId,
+      loginUserId == userId ? undefined : true,
+    );
+
+    const myClothesRes = Promise.all(
+      clothesList.map(async (clothes) => {
+        const clothesRes: GetClothesListRes = {
+          image: clothes.image,
+          id: clothes.id,
+          closetId: clothes.closet?.id,
+          category: clothes.category,
+          season: clothes.season,
+          status: clothes.status,
+          isOpen: clothes.isOpen,
+          name: clothes.name,
+          tag: clothes.tag,
+          isWished: await this.getIsWished(loginUserId, clothes.id),
+        };
+        return clothesRes;
+      }),
+    );
+
+    return myClothesRes;
+  }
+
+  static async getIsWished(
+    userId: number | null,
+    clothesId: number,
+  ): Promise<boolean> {
+    if (!userId) return false;
+    const isWished = await WishRepository.findWishByData(
+      userId,
+      clothesId,
+      true,
+    );
+    return isWished ? true : false;
   }
 }

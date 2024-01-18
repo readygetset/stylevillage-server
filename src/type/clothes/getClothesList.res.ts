@@ -4,12 +4,13 @@ import Status from '../../common/enum/status.enum';
 
 export default interface GetClothesListRes {
   id: number;
-  closetId: number | null;
-  category: Category | null;
-  season: Season | null;
+  closetId?: number;
+  category?: Category;
+  season?: Season;
   status: Status;
   isOpen: boolean;
   name: string;
-  tag: string | null;
+  tag?: string;
   isWished: boolean;
+  image?: string;
 }
