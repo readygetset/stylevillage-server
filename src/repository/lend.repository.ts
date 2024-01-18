@@ -19,6 +19,7 @@ const LendRepository = AppDataSource.getRepository(Lend).extend({
     return this.createQueryBuilder('lend')
       .leftJoinAndSelect('lend.lender', 'lender')
       .leftJoinAndSelect('lend.loanee', 'loanee')
+      .leftJoinAndSelect('lend.clothes', 'clothes')
       .where({ lender })
       .select(getLendsResFields)
       .orderBy('lend.createdAt', 'DESC')
@@ -29,6 +30,7 @@ const LendRepository = AppDataSource.getRepository(Lend).extend({
     return this.createQueryBuilder('lend')
       .leftJoinAndSelect('lend.lender', 'lender')
       .leftJoinAndSelect('lend.loanee', 'loanee')
+      .leftJoinAndSelect('lend.clothes', 'clothes')
       .where({ loanee })
       .select(getLendsResFields)
       .orderBy('lend.createdAt', 'DESC')
@@ -76,7 +78,9 @@ const LendRepository = AppDataSource.getRepository(Lend).extend({
 
 const getLendsResFields = [
   'lend.id',
-  'lend.clothes',
+  'clothes.id',
+  'clothes.name',
+  'clothes.image',
   'lend.price',
   'lend.startDate',
   'lend.endDate',
