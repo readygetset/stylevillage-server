@@ -69,6 +69,7 @@ export default class WishService {
             name: wish.clothes.name,
             tag: wish.clothes.tag,
             isWished: true,
+            ownerNickname: wish.clothes.owner.nickname,
           };
           return clothesRes;
         }
