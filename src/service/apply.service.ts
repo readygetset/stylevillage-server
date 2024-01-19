@@ -69,14 +69,14 @@ export default class ApplyService {
       const eachApply: getSendedApply = {
         id: apply.id,
         clothes: {
-          id: apply.clothes.id,
-          name: apply.clothes.name,
-          image: apply.clothes.image,
+          id: apply.clothes?.id,
+          name: apply.clothes?.name,
+          image: apply.clothes?.image,
         },
         owner: {
-          id: apply.clothes.owner.id,
-          username: apply.clothes.owner.username,
-          nickname: apply.clothes.owner.nickname,
+          id: apply.clothes?.owner?.id,
+          username: apply.clothes?.owner?.username,
+          nickname: apply.clothes?.owner?.nickname,
         },
         isAccepted: apply.isAccepted,
         isRejected: apply.isRejected,

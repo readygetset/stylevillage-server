@@ -10,8 +10,8 @@ interface user {
 }
 export default interface getSendedApply {
   id?: number;
-  clothes: clothes;
-  owner: user;
+  clothes?: clothes;
+  owner?: user;
   isAccepted: boolean;
   isRejected: boolean;
   detail?: string;
