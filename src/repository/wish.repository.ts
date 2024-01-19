@@ -42,7 +42,7 @@ const WishRepository = AppDataSource.getRepository(Wish).extend({
         user: { id: userId },
         isWished: true,
       },
-      relations: ['clothes', 'user'],
+      relations: { clothes: { owner: true }, user: true },
       order: {
         id: 'DESC',
       },
