@@ -5,7 +5,7 @@ import ClothesRepository from '../repository/clothes.repository';
 import UserRepository from '../repository/user.repository';
 import WishRepository from '../repository/wish.repository';
 import { BadRequestError } from '../util/customErrors';
-import GetWishListRes from '../type/wish/getWishList.res';
+import GetClothesListRes from '../type/clothes/getClothesList.res';
 
 export default class WishService {
   static async createWish(
@@ -51,14 +51,29 @@ export default class WishService {
     return await WishRepository.update({ id: wish.id }, { isWished: false });
   }
 
-  static async getWishList(userId: number): Promise<GetWishListRes> {
+  static async getWishList(userId: number): Promise<GetClothesListRes[]> {
     const wishesInfo = await WishRepository.findWishesByUser(userId);
-    const wishListPromises = wishesInfo.map(async (wish) => {
-      if (!wish.clothes)
-        throw new BadRequestError('찜 목록에 존재하지 않는 옷이 있습니다');
-      return wish.clothes;
-    });
-    const wishList = await Promise.all(wishListPromises);
-    return { wishList };
+    const wishList = Promise.all(
+      wishesInfo.map(async (wish) => {
+        if (!wish.clothes) {
+          throw new BadRequestError('찜 목록에 존재하지 않는 옷이 있습니다');
+        } else {
+          const clothesRes: GetClothesListRes = {
+            image: wish.clothes.image,
+            id: wish.clothes.id,
+            closetId: wish.clothes.closet?.id,
+            category: wish.clothes.category,
+            season: wish.clothes.season,
+            status: wish.clothes.status,
+            isOpen: wish.clothes.isOpen,
+            name: wish.clothes.name,
+            tag: wish.clothes.tag,
+            isWished: true,
+          };
+          return clothesRes;
+        }
+      }),
+    );
+    return wishList;
   }
 }
