@@ -36,10 +36,7 @@ export default class ClothesService {
       image: clothesInfo.image,
       owner: userInfo,
     };
-
-    if (clothesInfo.closet && clothesInfo.closet?.owner.id != userId) {
-      throw new BadRequestError('본인의 옷장만 지정할 수 있습니다.');
-    }
+    console.log(clothesInfo.closet);
 
     const newClothes: Clothes = ClothesRepository.create(clothes);
     return await ClothesRepository.save(newClothes);
@@ -83,6 +80,7 @@ export default class ClothesService {
     const wishCount = await WishRepository.findAndCountByclothesId(clothesId);
 
     const getClothesRes: GetClothesRes = {
+      closetId: clothes.closet?.id,
       id: clothes.id,
       description: clothes.description,
       closet: clothes.closet,
@@ -195,6 +193,7 @@ export default class ClothesService {
           isOpen: clothes.isOpen,
           name: clothes.name,
           tag: clothes.tag,
+          description: clothes.description,
           isWished: await this.getIsWished(loginUserId, clothes.id),
         };
         return clothesRes;

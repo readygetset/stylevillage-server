@@ -7,4 +7,5 @@ export default interface Clothes {
   name: string;
   tag?: string;
   image?: string;
+  isOpen?: boolean;
 }
