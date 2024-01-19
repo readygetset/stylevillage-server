@@ -130,6 +130,7 @@ export default class ClothesService {
           name: clothes.name,
           tag: clothes.tag,
           isWished: await this.getIsWished(userId, clothes.id),
+          ownerNickname: clothes.owner.nickname,
         };
         return clothesWithIsWished;
       }),

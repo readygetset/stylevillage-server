@@ -48,6 +48,7 @@ const ClothesRepository = AppDataSource.getRepository(Clothes).extend({
       (
         await this.find({
           where: { isOpen: true },
+          relations: { owner: true },
         })
       ).map(async (clothes) => {
         const count = await WishRepository.findAndCountByclothesId(clothes.id);
