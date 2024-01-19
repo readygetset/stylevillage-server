@@ -30,6 +30,7 @@ export default class ClosetService {
         name: clothes.name,
         tag: clothes.tag,
         image: clothes.image,
+        isOpen: clothes.isOpen,
       };
       return eachClothes;
     });
