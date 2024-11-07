@@ -6,7 +6,6 @@ Backend server project for the Style Village service built on MySQL/MariaDB.
 - TypeScript
 - Express
 - TypeORM
-- ESLint/Prettier
 
 ## Project Structure
 This project follows an MVC design:
